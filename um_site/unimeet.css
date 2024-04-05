@@ -69,3 +69,51 @@ footer {
 .navbar-brand {
   margin-left: 10px;
 }
+
+.navbar-toggler {
+  margin-right: 10px;
+}
+
+.card {
+  background-color: lightgray;
+  padding: 10px;
+  margin: 20px;
+}
+
+.event-name {
+  font-weight: bold;
+}
+
+.card-time {
+  font-style: italic;
+}
+
+.card-right-col {
+  margin-right: 10px;
+}
+
+.login-title {
+  color: lightblue;
+  font-weight: bold;
+}
+
+.login-icon {
+  display: inline-block;
+  font-size: 80px;
+}
+
+.login-col {
+  text-align: center;
+}
+
+.login-button {
+  margin-top: 20px;
+}
+
+.form-group {
+  text-align: left;
+}
+
+.form-container {
+  padding: 50px;
+}
