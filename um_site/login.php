@@ -1,3 +1,28 @@
+<?php
+require("connect-db.php");
+require("unimeet-db.php");
+?>
+
+<!--This stores the e-mail used to log-in (so we can query with the given e-mail) -->
+<?php
+session_start();
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST['username'];
+    $account = getAccount($username);
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $verify = password_verify($_POST['password'], $account['password']);
+    var_dump($verify);
+    if($verify){
+      $_SESSION['username'] = $username;
+      header("Location: homepage.php");
+      exit();
+    }
+    else{
+
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,7 +65,7 @@
     <i class="mdi mdi-account-check-outline icon login-icon"></i>
     <h3 class="row justify-content-center">Sign In</h3>
     <div class="form-container">
-        <form action="homepage.php" method="post">
+        <form action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
             <div class="form-group">
                 <label for="username">E-Mail<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">

@@ -1,7 +1,20 @@
-<!--This stores the e-mail used to log-in (so we can query with the given e-mail) -->
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
+require("connect-db.php");
+require("unimeet-db.php");
+?>
+
+<?php
+session_start();
+if(isset($_SESSION['username'])) {
+  $username = $_SESSION['username'];
+  //var_dump($username);
+  $list_of_events = getEventsByAccount($username);
+  $list_of_clubs = getClubsByAccount($username);
+  //var_dump($list_of_events);
+} else {
+  // Redirect to login page or handle unauthorized access
+  header("Location: login.php");
+  exit();
 }
 ?>
 
@@ -65,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               Account
           </div>
         </a>
-        <a class="nav-item nav-link active" href="login.php">
+        <a class="nav-item nav-link active" href="logout.php">
           <div class="icon-wrapper">
               <i class="mdi mdi-logout icon"></i>
           </div>
@@ -80,33 +93,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="row justify-content-center mt-4">
   <div class="col">
     <h3 class="row justify-content-center">My Events</h3>
+    <?php foreach ($list_of_events as $event_info): ?>
     <div class="card">
       <div class="row">
         <div class="col">
-          <h4 class="card-title event-name">Event Name</h4>
-          <h6 class="card-subtitle mb-2">Location</h6>
-          <h6 class="card-subtitle mb-2">Club</h6>
+          <h4 class="card-title event-name"><?php echo $event_info['event_description']?></h4>
+          <h6 class="card-subtitle mb-2"><?php echo $event_info['address']?></h6>
+          <h6 class="card-subtitle mb-2"><?php echo $event_info['club_description']?></h6>
         </div>
         <div class="col text-end card-right-col">
-          <h3 class="card-time card-title text-right">7:00</h3>
-          <h6 class="card-subtitle mb-2 text-right">4/5/24</h6>
+          <h3 class="card-time card-title text-right"><?php echo date("d-m-Y", strtotime($event_info['date']))?></h3>
         </div>
       </div>
     </div>
+    <?php endforeach; ?>
   </div>
   <div class="col">
     <h3 class="row justify-content-center">My Clubs</h3>
+    <?php foreach ($list_of_clubs as $club_info): ?>
     <div class="card">
       <div class="row">
         <div class="col">
-          <h4 class="card-title event-name">Club Name</h4>
-          <h6 class="card-subtitle mb-2">Club Category</h6>
+          <h4 class="card-title event-name"><?php echo $club_info['club_description']?></h4>
+          <h6 class="card-subtitle mb-2"><?php echo $club_info['category_name']?></h6>
         </div>
         <div class="col text-end card-right-col">
-          <h3 class="card-time card-title text-right">PRIV</h3>
+          <h3 class="card-time card-title text-right"><?php echo strtoupper($club_info['privilege'])?></h3>
         </div>
       </div>
     </div>
+    <?php endforeach; ?>
   </div>
 </div>
 
