@@ -30,11 +30,14 @@
 ////////////////////////////////////////////
 
 /** S24, PHP (on GCP, local XAMPP, or CS server) connect to MySQL (on local XAMPP) **/
-$username = 'ajp4hrw';
-$password = 'aj-db-101';
+// $username = 'ajp4hrw';
+$username = 'uyp7dr';
+// $password = 'aj-db-101';
+$password = '@Dl-1234'
 $host = 'mysql01.cs.virginia.edu';
-$dbname = 'ajp4hrw';    
-$dsn = "mysql:host=$host;dbname=$dbname";  
+// $dbname = 'ajp4hrw';
+$dbname = 'uyp7dr';    
+$dsn = "mysql:host=$host;dbname=$dbname";   
 ////////////////////////////////////////////
 
 /** S24, PHP (on GCP, local XAMPP, or CS server) connect to MySQL (on CS server) **/
