@@ -33,7 +33,7 @@
 // $username = 'ajp4hrw';
 $username = 'uyp7dr';
 // $password = 'aj-db-101';
-$password = '@Dl-1234'
+$password = '@Dl-1234';
 $host = 'mysql01.cs.virginia.edu';
 // $dbname = 'ajp4hrw';
 $dbname = 'uyp7dr';    

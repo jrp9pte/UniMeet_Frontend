@@ -12,6 +12,21 @@ function getAccount($email)
     return $result;
 }
 
+function createAccount($email, $password, $first_name, $last_name)
+{
+    global $db;
+    $hashed_pw = password_hash($password, PASSWORD_DEFAULT); 
+    $query = "INSERT INTO accounts (email, password, first_name, last_name) VALUES (:email, :password, :first_name, :last_name)";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':email', $email);
+    $statement->bindValue(':password', $hashed_pw);
+    $statement->bindValue(':first_name', $first_name);
+    $statement->bindValue(':last_name', $last_name);
+    $result = $statement->execute();
+    $statement->closeCursor();
+    return $result;
+}
+
 function getEventsByAccount($email)
 {
     global $db;
