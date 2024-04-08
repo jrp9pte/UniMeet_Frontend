@@ -6,19 +6,38 @@ require("unimeet-db.php");
 <!--This stores the e-mail used to log-in (so we can query with the given e-mail) -->
 <?php
 session_start();
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login-button'])) {
     $username = $_POST['username'];
     $account = getAccount($username);
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $verify = password_verify($_POST['password'], $account['password']);
-    var_dump($verify);
     if($verify){
       $_SESSION['username'] = $username;
       header("Location: homepage.php");
       exit();
     }
     else{
+      echo '<script>alert("Incorrect username or password.")</script>'; 
+    }
+}
 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup-button'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    if (getAccount($username)) {
+      echo '<script>alert("Email is associated with another account.")</script>'; 
+    } else {
+        $accountCreated = createAccount($username, $password, $first_name, $last_name);
+        if ($accountCreated) {
+            echo "Account created successfully.";
+            $_SESSION['username'] = $username;
+            header("Location: homepage.php");
+            exit();
+        } else {
+          echo '<script>alert("Failed to create account.")</script>'; 
+        }
     }
 }
 ?>
@@ -48,16 +67,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <i class="mdi mdi-account-plus-outline icon login-icon"></i>
     <h3 class="row justify-content-center">Sign Up</h3>
     <div class="form-container">
-        <form>
+        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
             <div class="form-group">
                 <label for="username">E-Mail<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="username" placeholder="Enter username">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label for="first_name">First Name<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter First Name">
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter Last Name">
             </div>
             <div class="form-group">
                 <label for="password">Password<span class="text-danger">*</span></label>
-                <input type="password" class="form-control" id="password" placeholder="Enter password">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
             </div>
-            <button type="submit" class="btn btn-primary login-button">Sign Up</button>
+            <button type="submit" name="signup-button" class="btn btn-primary login-button">Sign Up</button>
         </form>
     </div>
   </div>
@@ -74,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="password">Password<span class="text-danger">*</span></label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
             </div>
-            <button type="submit" class="btn btn-primary login-button">Login</button>
+            <button type="submit" name="login-button" class="btn btn-primary login-button">Login</button>
         </form>
     </div>
   </div>
