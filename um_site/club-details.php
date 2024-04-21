@@ -16,6 +16,13 @@ if(isset($_SESSION['username'])) {
   header("Location: login.php");
   exit();
 }
+if(isset($_GET['club_id'])) {
+    $club_id = $_GET['club_id'];
+    $club = getClubByID($club_id);
+    //var_dump($club);
+} else {
+    echo "Club ID not provided.";
+}
 ?>
 
 
@@ -39,35 +46,16 @@ if(isset($_SESSION['username'])) {
 
 <body>  
 <?php include('navbar.html') ?> 
+<div class="mt-4">
+    <h3 class="row justify-content-center"><?php echo $club['club_description']?></h3>
+    <h4 class="row justify-content-center details-club"><?php echo $club['category_name']?></h4>
+</div>
 <div class="row justify-content-center mt-4">
   <div class="col">
-    <h3 class="row justify-content-center">Clubs</h3>
-    <form action="#" class="search-bar">
-      <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Search Clubs..." aria-label="Search Clubs..." aria-describedby="button-addon2">
-        <div class="input-group-append">
-          <button class="btn search-button" type="button" id="button-addon2"><i class="mdi mdi-magnify search-icon"></i></button>
-        </div>
-      </div>
-    </form>
-    <?php foreach ($list_of_clubs as $club_info): ?>
-    <div class="card">
-      <div class="card-body d-flex justify-content-between">
-        <div>
-          <h4 class="card-title event-name"><?php echo $club_info['club_description']?></h4>
-          <h6 class="card-subtitle mb-2"><?php echo $club_info['category_name']?></h6>
-        </div>
-        <div>
-          <?php if (in_array($club_info['club_id'], $list_of_user_club_ids)): ?>
-            <button type="submit" name="signup-button" class="btn btn-danger d-block mb-2">Leave Club</button>
-          <?php else: ?>
-            <button type="submit" name="signup-button" class="btn btn-success d-block mb-2">Join Club</button>
-          <?php endif; ?>
-          <a href="club-details.php?club_id=<?php echo $club_info['club_id'] ?>" class="btn btn-warning d-block">View Details...</a>
-        </div>
-      </div>
-    </div>
-    <?php endforeach; ?>
+    <h3 class="row justify-content-center">Club Events</h3>
+  </div>
+  <div class="col">
+    <h3 class="row justify-content-center">Club Members</h3>
   </div>
 </div>
 

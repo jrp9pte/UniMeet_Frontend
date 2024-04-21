@@ -67,6 +67,26 @@ function getClubsByAccount($email)
     }
 }
 
+function getClubIDsByAccount($email)
+{
+    global $db;
+    $query = "SELECT club_id FROM member_of NATURAL JOIN clubs NATURAL JOIN club_categories WHERE email=:email";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':email', $email);
+        $statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_COLUMN, 0); //Transforms result into 1D array of Club IDs
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) 
+    {
+        $e->getMessage();
+    } catch (Exception $e)
+    {
+        $e->getMessage();
+    }
+}
+
 function getClubs()
 {
     global $db;
@@ -75,6 +95,26 @@ function getClubs()
         $statement = $db->prepare($query);
         $statement->execute();
         $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) 
+    {
+        $e->getMessage();
+    } catch (Exception $e)
+    {
+        $e->getMessage();
+    }
+}
+
+function getClubByID($club_id)
+{
+    global $db;
+    $query = "SELECT * FROM clubs NATURAL JOIN club_categories WHERE club_id=:club_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':club_id', $club_id);
+        $statement->execute();
+        $result = $statement->fetch();
         $statement->closeCursor();
         return $result;
     } catch (PDOException $e) 

@@ -117,3 +117,21 @@ footer {
 .form-container {
   padding: 50px;
 }
+
+.search-bar {
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.search-button {
+  background-color: lightgray;
+}
+
+.search-icon {
+  font-size: 24px;
+  color: white;
+}
+
+.details-club {
+  font-style: italic;
+}
