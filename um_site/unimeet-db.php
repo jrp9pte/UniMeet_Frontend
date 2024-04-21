@@ -67,4 +67,23 @@ function getClubsByAccount($email)
     }
 }
 
+function getClubs()
+{
+    global $db;
+    $query = "SELECT * FROM clubs NATURAL JOIN club_categories";
+    try {
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) 
+    {
+        $e->getMessage();
+    } catch (Exception $e)
+    {
+        $e->getMessage();
+    }
+}
+
 ?>
