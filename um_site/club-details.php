@@ -7,10 +7,6 @@ require("unimeet-db.php");
 session_start();
 if(isset($_SESSION['username'])) {
   $username = $_SESSION['username'];
-  //var_dump($username);
-  $list_of_clubs = getClubs();
-  $list_of_user_club_ids = getClubIDsByAccount($username);
-  //var_dump($list_of_user_club_ids);
 } else {
   // Redirect to login page or handle unauthorized access
   header("Location: login.php");
@@ -19,9 +15,47 @@ if(isset($_SESSION['username'])) {
 if(isset($_GET['club_id'])) {
     $club_id = $_GET['club_id'];
     $club = getClubByID($club_id);
-    //var_dump($club);
+    $club_events = getEventsByClub($club_id);
+    $club_members = getMembersByClub($club_id);
+    $privilege = 'user';
+    foreach ($club_members as $item){
+      if($item['email'] === $username){
+        $privilege = $item['privilege'];
+        break;
+      }
+    }
+    //var_dump($club_members);
 } else {
     echo "Club ID not provided.";
+}
+if($_SERVER['REQUEST_METHOD'] == 'POST') {
+  if(!empty($_POST['remove-button'])){
+    if($_POST['email'] === $username){
+      echo '<script>alert("Error: Unable to delete yourself as a member.")</script>'; 
+    }
+    else{
+      deleteMember($club_id, $_POST['email']);
+      $club_members = getMembersByClub($club_id);
+    }
+  }
+  else if(!empty($_POST['demote-button'])){
+    if($_POST['email'] === $username){
+      echo '<script>alert("Error: Unable to edit your own role as a member.")</script>'; 
+    }
+    else{
+      updateMember($club_id, $_POST['email'], 'user');
+      $club_members = getMembersByClub($club_id);
+    }
+  }
+  else if(!empty($_POST['promote-button'])){
+    if($_POST['email'] === $username){
+      echo '<script>alert("Error: Unable to edit your own role as a member.")</script>'; 
+    }
+    else{
+      updateMember($club_id, $_POST['email'], 'admin');
+      $club_members = getMembersByClub($club_id);
+    }
+  }
 }
 ?>
 
@@ -53,9 +87,50 @@ if(isset($_GET['club_id'])) {
 <div class="row justify-content-center mt-4">
   <div class="col">
     <h3 class="row justify-content-center">Club Events</h3>
+    <?php foreach ($club_events as $event_info): ?>
+      <div class="card">
+        <div class="row">
+          <div class="col">
+            <h4 class="card-title event-name"><?php echo $event_info['event_description']?></h4>
+            <h6 class="card-subtitle mb-2"><?php echo $event_info['address']?></h6>
+            <h6 class="card-subtitle mb-2"><?php echo $event_info['club_description']?></h6>
+            <h6 class="card-subtitle mb-2"><?php echo $event_info['category_name']?></h6>
+          </div>
+          <div class="col text-end card-right-col">
+            <h3 class="card-time card-title text-right"><?php echo date("d-m-Y", strtotime($event_info['date']))?></h3>
+          </div>
+        </div>
+      </div>
+      <?php endforeach; ?>
   </div>
   <div class="col">
     <h3 class="row justify-content-center">Club Members</h3>
+    <?php foreach ($club_members as $member_info): ?>
+      <div class="card">
+        <div class="card-body d-flex justify-content-between">
+          <div>
+            <h4 class="card-title event-name"><?php echo $member_info['email']?></h4>
+          </div>
+          <div>
+            <h3 class="card-time card-title text-right"><?php echo strtoupper($member_info['privilege'])?></h3>
+            <?php if ($privilege === 'admin'): ?>
+              <form action="club-details.php?club_id=<?php echo $club_id ?>" method="post">
+                <?php if ($member_info['privilege'] === 'admin'): ?>
+                <button type="submit" name="demote-button" value="Role Change" class="btn btn-warning d-block mb-2">Demote Member</button>
+                <?php elseif ($member_info['privilege'] === 'user'): ?>
+                <button type="submit" name="promote-button" value="Role Change" class="btn btn-warning d-block mb-2">Promote Member</button>
+                <?php endif; ?>
+                <input type="hidden" name="email" value="<?php echo $member_info['email']; ?>" />
+              </form>
+              <form action="club-details.php?club_id=<?php echo $club_id ?>" method="post">
+                <button type="submit" name="remove-button" value="Remove" class="btn btn-danger d-block mb-2">Remove Member</button>
+                <input type="hidden" name="email" value="<?php echo $member_info['email']; ?>" />
+              </form>
+            <?php endif; ?>
+          </div>
+        </div>
+      </div>
+      <?php endforeach; ?>
   </div>
 </div>
 

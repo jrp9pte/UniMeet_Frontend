@@ -16,6 +16,16 @@ if(isset($_SESSION['username'])) {
   header("Location: login.php");
   exit();
 }
+if($_SERVER['REQUEST_METHOD'] == 'POST') {
+  if(!empty($_POST['leave-button'])){
+    deleteMember($_POST['club_id'], $username);
+    $list_of_user_club_ids = getClubIDsByAccount($username);
+  }
+  else if(!empty($_POST['join-button'])){
+    createMember($_POST['club_id'], $username, 'user');
+    $list_of_user_club_ids = getClubIDsByAccount($username);
+  }
+}
 ?>
 
 
@@ -59,9 +69,15 @@ if(isset($_SESSION['username'])) {
         </div>
         <div>
           <?php if (in_array($club_info['club_id'], $list_of_user_club_ids)): ?>
-            <button type="submit" name="signup-button" class="btn btn-danger d-block mb-2">Leave Club</button>
+            <form action="clubs.php" method="post">
+              <button type="submit" name="leave-button" value="Leave" class="btn btn-danger d-block mb-2">Leave Club</button>
+              <input type="hidden" name="club_id" value="<?php echo $club_info['club_id']; ?>" />
+            </form>
           <?php else: ?>
-            <button type="submit" name="signup-button" class="btn btn-success d-block mb-2">Join Club</button>
+            <form action="clubs.php" method="post">
+              <button type="submit" name="join-button" value="Join" class="btn btn-success d-block mb-2">Join Club</button>
+              <input type="hidden" name="club_id" value="<?php echo $club_info['club_id']; ?>" />
+            </form>
           <?php endif; ?>
           <a href="club-details.php?club_id=<?php echo $club_info['club_id'] ?>" class="btn btn-warning d-block">View Details...</a>
         </div>

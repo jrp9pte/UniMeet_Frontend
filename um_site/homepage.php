@@ -49,6 +49,7 @@ if(isset($_SESSION['username'])) {
             <h4 class="card-title event-name"><?php echo $event_info['event_description']?></h4>
             <h6 class="card-subtitle mb-2"><?php echo $event_info['address']?></h6>
             <h6 class="card-subtitle mb-2"><?php echo $event_info['club_description']?></h6>
+            <h6 class="card-subtitle mb-2"><?php echo $event_info['category_name']?></h6>
           </div>
           <div class="col text-end card-right-col">
             <h3 class="card-time card-title text-right"><?php echo date("d-m-Y", strtotime($event_info['date']))?></h3>
