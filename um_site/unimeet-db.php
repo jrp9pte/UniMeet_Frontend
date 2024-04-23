@@ -15,6 +15,30 @@ function createAccount($email, $password, $first_name, $last_name)
     return $result;
 }
 
+function createClub($club_description)
+{
+    global $db;
+    $query = "INSERT INTO clubs (club_description) VALUES (:club_description)";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':club_description', $club_description);
+    $result = $statement->execute();
+    $lastInsertedId = $db->lastInsertId();
+    $statement->closeCursor();
+    return $lastInsertedId;
+}
+
+function createClubCategory($club_id, $category_name)
+{
+    global $db;
+    $query = "INSERT INTO club_categories (club_id, category_name) VALUES (:club_id, :category_name)";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':club_id', $club_id);
+    $statement->bindValue(':category_name', $category_name);
+    $result = $statement->execute();
+    $statement->closeCursor();
+    return $result;
+}
+
 function createMember($club_id, $email, $privilege){
     global $db;
     $query = "INSERT INTO member_of (club_id, email, privilege) VALUES (:club_id, :email, :privilege)";
@@ -49,6 +73,25 @@ function getAccount($email)
     $result = $statement->fetch();
     $statement->closeCursor();
     return $result;
+}
+
+function getCategories()
+{
+    global $db;
+    $query = "SELECT * FROM categories";
+    try {
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) 
+    {
+        $e->getMessage();
+    } catch (Exception $e)
+    {
+        $e->getMessage();
+    }
 }
 
 function getClubsByAccount($email)
@@ -117,6 +160,27 @@ function getClubs()
     $query = "SELECT * FROM clubs NATURAL JOIN club_categories";
     try {
         $statement = $db->prepare($query);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) 
+    {
+        $e->getMessage();
+    } catch (Exception $e)
+    {
+        $e->getMessage();
+    }
+}
+
+function getClubsByFilter($filter)
+{
+    global $db;
+    $patternFilter = "%".$filter."%";
+    $query = "SELECT * FROM clubs NATURAL JOIN club_categories WHERE club_description LIKE :patternFilter";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':patternFilter', $patternFilter);
         $statement->execute();
         $result = $statement->fetchAll();
         $statement->closeCursor();

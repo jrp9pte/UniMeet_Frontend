@@ -17,12 +17,16 @@ if(isset($_SESSION['username'])) {
   exit();
 }
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
-  if(!empty($_POST['leave-button'])){
+  if(!empty($_POST['search-button'])){
+    $list_of_clubs = getClubsByFilter($_POST['search-filter']);
+  }
+  else if(!empty($_POST['leave-button'])){
     deleteMember($_POST['club_id'], $username);
     $list_of_user_club_ids = getClubIDsByAccount($username);
   }
   else if(!empty($_POST['join-button'])){
-    createMember($_POST['club_id'], $username, 'user');
+    $result = createMember($_POST['club_id'], $username, 'user');
+    var_dump($result);
     $list_of_user_club_ids = getClubIDsByAccount($username);
   }
 }
@@ -51,12 +55,19 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php include('navbar.html') ?> 
 <div class="row justify-content-center mt-4">
   <div class="col">
-    <h3 class="row justify-content-center">Clubs</h3>
-    <form action="#" class="search-bar">
+    <div class="d-flex justify-content-center align-items-center">
+      <h3 class="mr-3">Clubs</h3>
+      <a class="nav-item nav-link active" href="create-club.php">
+        <div class="icon-wrapper">
+          <i class="mdi mdi-plus add-icon"></i>
+        </div>
+      </a>
+    </div>
+    <form action="clubs.php" method="post" class="search-bar">
       <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Search Clubs..." aria-label="Search Clubs..." aria-describedby="button-addon2">
+        <input type="text" name="search-filter" class="form-control" placeholder="Search Clubs..." aria-label="Search Clubs..." aria-describedby="button-addon2">
         <div class="input-group-append">
-          <button class="btn search-button" type="button" id="button-addon2"><i class="mdi mdi-magnify search-icon"></i></button>
+          <button class="btn search-button" type="submit" name="search-button" value="Search" id="button-addon2"><i class="mdi mdi-magnify search-icon"></i></button>
         </div>
       </div>
     </form>

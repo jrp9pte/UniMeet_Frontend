@@ -45,6 +45,11 @@ footer {
   object-position: 100% 50%;
 }
 
+.add-icon {
+  font-size: 32px;
+  color: lightblue;
+}
+
 .icon-button {
   background: none;
   border: none;

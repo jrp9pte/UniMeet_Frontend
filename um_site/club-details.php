@@ -86,7 +86,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 <div class="row justify-content-center mt-4">
   <div class="col">
-    <h3 class="row justify-content-center">Club Events</h3>
+    <div class="d-flex justify-content-center align-items-center">
+      <h3 class="mr-3">Club Events</h3>
+      <a class="nav-item nav-link active" href="create-event.php">
+        <div class="icon-wrapper">
+          <i class="mdi mdi-plus add-icon"></i>
+        </div>
+      </a>
+    </div>
     <?php foreach ($club_events as $event_info): ?>
       <div class="card">
         <div class="row">
@@ -104,7 +111,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
       <?php endforeach; ?>
   </div>
   <div class="col">
-    <h3 class="row justify-content-center">Club Members</h3>
+    <div class="d-flex justify-content-center align-items-center">
+      <h3 class="mr-3">Club Members</h3>
+      <a class="nav-item nav-link active" href="create-member.php?club_id=<?php echo $club_id; ?>">
+        <div class="icon-wrapper">
+          <i class="mdi mdi-plus add-icon"></i>
+        </div>
+      </a>
+    </div>
     <?php foreach ($club_members as $member_info): ?>
       <div class="card">
         <div class="card-body d-flex justify-content-between">
