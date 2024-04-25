@@ -45,6 +45,11 @@ footer {
   object-position: 100% 50%;
 }
 
+.add-icon {
+  font-size: 32px;
+  color: lightblue;
+}
+
 .icon-button {
   background: none;
   border: none;
@@ -116,4 +121,22 @@ footer {
 
 .form-container {
   padding: 50px;
+}
+
+.search-bar {
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.search-button {
+  background-color: lightgray;
+}
+
+.search-icon {
+  font-size: 24px;
+  color: white;
+}
+
+.details-club {
+  font-style: italic;
 }

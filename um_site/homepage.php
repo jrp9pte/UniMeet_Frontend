@@ -38,96 +38,46 @@ if(isset($_SESSION['username'])) {
 </head>
 
 <body>  
-  <!-- NavBar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">UniMeet</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="#">
-          <div class="icon-wrapper">
-              <i class="mdi mdi-home icon"></i>
+  <?php include('navbar.html') ?> 
+  <div class="row justify-content-center mt-4">
+    <div class="col">
+      <h3 class="row justify-content-center">My Events</h3>
+      <?php foreach ($list_of_events as $event_info): ?>
+      <div class="card">
+        <div class="row">
+          <div class="col">
+            <h4 class="card-title event-name"><?php echo $event_info['event_description']?></h4>
+            <h6 class="card-subtitle mb-2"><?php echo $event_info['address']?></h6>
+            <h6 class="card-subtitle mb-2"><?php echo $event_info['club_description']?></h6>
+            <h6 class="card-subtitle mb-2"><?php echo $event_info['category_name']?></h6>
           </div>
-          <div class="text-wrapper">
-              Home
+          <div class="col text-end card-right-col">
+            <h3 class="card-time card-title text-right"><?php echo date("d-m-Y", strtotime($event_info['date']))?></h3>
           </div>
-        </a>
-        <a class="nav-item nav-link active" href="#">
-          <div class="icon-wrapper">
-              <i class="mdi mdi-calendar icon"></i>
-          </div>
-          <div class="text-wrapper">
-              Events
-          </div>
-        </a>
-        <a class="nav-item nav-link active" href="#">
-          <div class="icon-wrapper">
-              <i class="mdi mdi-account-group icon"></i>
-          </div>
-          <div class="text-wrapper">
-              Clubs
-          </div>
-        </a>
-        <a class="nav-item nav-link active" href="#">
-          <div class="icon-wrapper">
-              <i class="mdi mdi-account icon"></i>
-          </div>
-          <div class="text-wrapper">
-              Account
-          </div>
-        </a>
-        <a class="nav-item nav-link active" href="logout.php">
-          <div class="icon-wrapper">
-              <i class="mdi mdi-logout icon"></i>
-          </div>
-          <div class="text-wrapper">
-              Log Out
-          </div>
-        </a>
-      </div>
-    </div>
-  </nav>
-
-<div class="row justify-content-center mt-4">
-  <div class="col">
-    <h3 class="row justify-content-center">My Events</h3>
-    <?php foreach ($list_of_events as $event_info): ?>
-    <div class="card">
-      <div class="row">
-        <div class="col">
-          <h4 class="card-title event-name"><?php echo $event_info['event_description']?></h4>
-          <h6 class="card-subtitle mb-2"><?php echo $event_info['address']?></h6>
-          <h6 class="card-subtitle mb-2"><?php echo $event_info['club_description']?></h6>
-        </div>
-        <div class="col text-end card-right-col">
-          <h3 class="card-time card-title text-right"><?php echo date("d-m-Y", strtotime($event_info['date']))?></h3>
         </div>
       </div>
+      <?php endforeach; ?>
     </div>
-    <?php endforeach; ?>
+    <div class="col">
+      <h3 class="row justify-content-center">My Clubs</h3>
+      <?php foreach ($list_of_clubs as $club_info): ?>
+      <div class="card">
+        <div class="row">
+          <div class="col">
+            <h4 class="card-title event-name"><?php echo $club_info['club_description']?></h4>
+            <h6 class="card-subtitle mb-2"><?php echo $club_info['category_name']?></h6>
+          </div>
+          <div class="col text-end card-right-col">
+            <h3 class="card-time card-title text-right"><?php echo strtoupper($club_info['privilege'])?></h3>
+          </div>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
   </div>
-  <div class="col">
-    <h3 class="row justify-content-center">My Clubs</h3>
-    <?php foreach ($list_of_clubs as $club_info): ?>
-    <div class="card">
-      <div class="row">
-        <div class="col">
-          <h4 class="card-title event-name"><?php echo $club_info['club_description']?></h4>
-          <h6 class="card-subtitle mb-2"><?php echo $club_info['category_name']?></h6>
-        </div>
-        <div class="col text-end card-right-col">
-          <h3 class="card-time card-title text-right"><?php echo strtoupper($club_info['privilege'])?></h3>
-        </div>
-      </div>
-    </div>
-    <?php endforeach; ?>
-  </div>
-</div>
 
 
-<br/><br/>
+  <br/><br/>
 
  
 
