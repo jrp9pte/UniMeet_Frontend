@@ -8,8 +8,10 @@ session_start();
 if(isset($_SESSION['username'])) {
   $username = $_SESSION['username'];
   //var_dump($username);
-  $list_of_clubs = getClubs();
-  $list_of_user_club_ids = getClubIDsByAccount($username);
+  $list_of_events = getAllEvents();
+  // console log the list of events
+  // var_dump($list_of_events);
+  $list_of_user_event_ids = getEventsByAccount($username);
   //var_dump($list_of_user_club_ids);
 } else {
   // Redirect to login page or handle unauthorized access
@@ -22,15 +24,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
   else if(!empty($_POST['leave-button'])){
     deleteMember($_POST['club_id'], $username);
-    $list_of_user_club_ids = getClubIDsByAccount($username);
+    $list_of_user_club_ids = getEventsByAccount($username);
   }
   else if(!empty($_POST['join-button'])){
-    $result = createMember($_POST['club_id'], $username, 'user');
+    // if user wants to join event
+    // $result = createMember($_POST['event_id'], $username, 'user');
+    $result = createReservation($_POST['event_id'], $username);
     var_dump($result);
-    $list_of_user_club_ids = getClubIDsByAccount($username);
+    $list_of_user_event_ids = getEventsByAccount($username);
   }
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -56,7 +61,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div class="row justify-content-center mt-4">
   <div class="col">
     <div class="d-flex justify-content-center align-items-center">
-      <h3 class="mr-3">Events??</h3>
+      <h3 class="mr-3">Events(buggy as hell)</h3>
       <a class="nav-item nav-link active" href="create-event.php">
         <div class="icon-wrapper">
           <i class="mdi mdi-plus add-icon"></i>
@@ -71,26 +76,28 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
       </div>
     </form>
-    <?php foreach ($list_of_clubs as $club_info): ?>
+    <!-- <?php echo "hi"?> -->
+    <?php foreach ($list_of_events as $event_info): ?>
     <div class="card">
       <div class="card-body d-flex justify-content-between">
         <div>
-          <h4 class="card-title event-name"><?php echo $club_info['club_description']?></h4>
-          <h6 class="card-subtitle mb-2"><?php echo $club_info['category_name']?></h6>
+          <!-- <?php echo "hi"?> -->
+          <h4 class="card-title event-name"><?php echo $event_info['event_description']?></h4>
+          <!-- <h6 class="card-subtitle mb-2"><?php echo $event_info['event_name']?></h6> -->
         </div>
         <div>
-          <?php if (in_array($club_info['club_id'], $list_of_user_club_ids)): ?>
+          <?php if (in_array($event_info['event_id'], $list_of_user_event_ids)): ?>
             <form action="clubs.php" method="post">
-              <button type="submit" name="leave-button" value="Leave" class="btn btn-danger d-block mb-2">Leave Club</button>
+              <button type="submit" name="leave-button" value="Leave" class="btn btn-danger d-block mb-2">Leave Event</button>
               <input type="hidden" name="club_id" value="<?php echo $club_info['club_id']; ?>" />
             </form>
           <?php else: ?>
-            <form action="clubs.php" method="post">
-              <button type="submit" name="join-button" value="Join" class="btn btn-success d-block mb-2">Join Club</button>
-              <input type="hidden" name="club_id" value="<?php echo $club_info['club_id']; ?>" />
+            <form action="events.php" method="post">
+              <button type="submit" name="join-button" value="Join" class="btn btn-success d-block mb-2">Join Event</button>
+              <input type="hidden" name="event_id" value="<?php echo $event_info['event_id']; ?>" />
             </form>
           <?php endif; ?>
-          <a href="club-details.php?club_id=<?php echo $club_info['club_id'] ?>" class="btn btn-warning d-block">View Details...</a>
+          <a href="event-details.php?event_id=<?php echo $event_info['event_id'] ?>" class="btn btn-warning d-block">View Details...</a>
         </div>
       </div>
     </div>

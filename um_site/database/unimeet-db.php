@@ -556,6 +556,7 @@ function getReservations($user_email){
 // After executing query below, check if query returns value > 0, return true, else, false
 // SELECT COUNT(*) FROM admin_of WHERE event_ID = event_id AND email = user_email;
 function isMyEvent($event_id, $user_email){
+    echo "<script>console.log('In isMyEvent');</script>";
     global $db;
     $query = "SELECT COUNT(*) FROM admin_of WHERE event_id = :event_id AND email = :user_email";
     $statement = $db->prepare($query);
@@ -712,7 +713,11 @@ function updateEventCategory($event_id, $event_category){
 // Check IsMyEvent(event_id, user_email)
 // Check HasReservation(user_email, event_id)
 // INSERT INTO reservations(event_id, email) VALUES (event_id, user_email);
-function createReservation($user_email, $event_id){
+function createReservation($event_id, $user_email ){
+    // consolelog 
+    echo "<script>console.log('In createReservation');</script>";
+    // $ismyevent = isMyEvent($event_id, $user_email)
+    // echo "<script>console.log('$ismyevent ');</script>";
     if(isMyEvent($event_id, $user_email)){
         return false;
     }
