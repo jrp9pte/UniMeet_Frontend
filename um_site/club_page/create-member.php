@@ -17,7 +17,7 @@ if(isset($_GET['club_id'])) {
     $club_id = $_GET['club_id'];
 } else {
     echo "Club ID not provided.";
-    header("Location: clubs.php");
+    header("Location: ./clubs.php");
     exit();
 }
 ?>
@@ -38,11 +38,11 @@ if(isset($_GET['club_id'])) {
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">  
-  <link rel="stylesheet" href="unimeet.css">  
+  <link rel="stylesheet" href="../unimeet.css">  
 </head>
 
 <body>  
-<?php include('navbar.html') ?> 
+<?php include('../navbar.html') ?> 
 <div class="row justify-content-center mt-4">
   <div class="col">
     <div class="d-flex justify-content-center align-items-center">

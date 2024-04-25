@@ -9,7 +9,7 @@ if(isset($_SESSION['username'])) {
   $username = $_SESSION['username'];
 } else {
   // Redirect to login page or handle unauthorized access
-  header("Location: login.php");
+  header("Location: ../login_page/login.php");
   exit();
 }
 if(isset($_GET['club_id'])) {
@@ -75,11 +75,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">  
-  <link rel="stylesheet" href="unimeet.css">  
+  <link rel="stylesheet" href="../unimeet.css">  
 </head>
 
 <body>  
-<?php include('navbar.html') ?> 
+<?php include('../navbar.html') ?> 
 <div class="mt-4">
     <h3 class="row justify-content-center"><?php echo $club['club_description']?></h3>
     <h4 class="row justify-content-center details-club"><?php echo $club['category_name']?></h4>
@@ -88,7 +88,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
   <div class="col">
     <div class="d-flex justify-content-center align-items-center">
       <h3 class="mr-3">Club Events</h3>
-      <a class="nav-item nav-link active" href="create-event.php">
+      <a class="nav-item nav-link active" href="../events_page/create-event.php">
         <div class="icon-wrapper">
           <i class="mdi mdi-plus add-icon"></i>
         </div>

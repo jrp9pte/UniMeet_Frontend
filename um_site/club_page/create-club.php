@@ -12,7 +12,7 @@ if(isset($_SESSION['username'])) {
   //var_dump($list_of_categories);
 } else {
   // Redirect to login page or handle unauthorized access
-  header("Location: login.php");
+  header("Location: ../login_page/login.php");
   exit();
 }
 ?>
@@ -33,17 +33,17 @@ if(isset($_SESSION['username'])) {
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">  
-  <link rel="stylesheet" href="unimeet.css">  
+  <link rel="stylesheet" href="../unimeet.css">  
 </head>
 
 <body>  
-<?php include('navbar.html') ?> 
+<?php include('../navbar.html') ?> 
 <div class="row justify-content-center mt-4">
   <div class="col">
     <div class="d-flex justify-content-center align-items-center">
       <h3 class="mr-3">Create Club</h3>
     </div>
-    <form class="search-bar" action="create-club-process.php" method="post">
+    <form class="search-bar" action="./create-club-process.php" method="post">
         <div class="form-group mb-3">
             <label for="club-name">Club Name:</label>
             <input type="text" class="mt-2 form-control" id="club-name" name="club-name" aria-describedby="clubHelp" placeholder="Enter club name...">

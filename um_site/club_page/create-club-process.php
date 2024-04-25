@@ -12,7 +12,7 @@ if(isset($_SESSION['username'])) {
         $clubID = createClub($_POST['club-name']);
         createClubCategory($clubID, $_POST['club-category']);
         createMember($clubID, $username, 'admin');
-        header("Location: clubs.php");
+        header("Location: ./clubs.php");
         exit();
     }
   }

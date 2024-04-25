@@ -12,18 +12,18 @@ if(isset($_SESSION['username'])) {
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(!empty($_POST['create-member-button'])){
                 createMember($club_id, $_POST['member-email'], $_POST['member-privilege']);
-                header("Location: club-details.php?club_id=" . $club_id);
+                header("Location: ./club-details.php?club_id=" . $club_id);
                 exit();
             }
         }
     } else {
         echo "Club ID not provided.";
-        header("Location: clubs.php");
+        header("Location: ./clubs.php");
         exit();
     }
 } else {
   // Redirect to login page or handle unauthorized access
-  header("Location: login.php");
+  header("Location: ../login_page/login.php");
   exit();
 }
 ?>
