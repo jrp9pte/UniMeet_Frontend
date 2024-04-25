@@ -1,6 +1,6 @@
 <?php
-require("connect-db.php");
-require("unimeet-db.php");
+require("../database/connect-db.php");
+require("../database/unimeet-db.php");
 ?>
 
 <?php
@@ -13,7 +13,7 @@ if(isset($_SESSION['username'])) {
   //var_dump($list_of_events);
 } else {
   // Redirect to login page or handle unauthorized access
-  header("Location: login.php");
+  header("Location: ../login_page/login.php");
   exit();
 }
 ?>
@@ -34,11 +34,11 @@ if(isset($_SESSION['username'])) {
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">  
-  <link rel="stylesheet" href="unimeet.css">  
+  <link rel="stylesheet" href="../unimeet.css">  
 </head>
 
 <body>  
-  <?php include('navbar.html') ?> 
+  <?php include('../navbar.html') ?> 
   <div class="row justify-content-center mt-4">
     <div class="col">
       <h3 class="row justify-content-center">My Events</h3>

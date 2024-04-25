@@ -1,6 +1,6 @@
 <?php
-require("connect-db.php");
-require("unimeet-db.php");
+require("../database/connect-db.php");
+require("../database/unimeet-db.php");
 ?>
 
 <!--This stores the e-mail used to log-in (so we can query with the given e-mail) -->
@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login-button'])) {
     $verify = password_verify($_POST['password'], $account['password']);
     if($verify){
       $_SESSION['username'] = $username;
-      header("Location: homepage.php");
+      header("Location: ../homepage/homepage.php", false);
       exit();
     }
     else{
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup-button'])) {
         if ($accountCreated) {
             echo "Account created successfully.";
             $_SESSION['username'] = $username;
-            header("Location: homepage.php");
+             header("Location: ../homepage/homepage.php");
             exit();
         } else {
           echo '<script>alert("Failed to create account.")</script>'; 

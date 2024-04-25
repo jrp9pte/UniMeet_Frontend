@@ -8,17 +8,13 @@ session_start();
 if(isset($_SESSION['username'])) {
   $username = $_SESSION['username'];
   //var_dump($username);
+  $list_of_events = getEventsByAccount($username);
+  $list_of_clubs = getClubsByAccount($username);
+  //var_dump($list_of_events);
 } else {
   // Redirect to login page or handle unauthorized access
-  header("Location: login.php");
+  header("Location: ../login_page/login.php");
   exit();
-}
-if(isset($_GET['club_id'])) {
-    $club_id = $_GET['club_id'];
-} else {
-    echo "Club ID not provided.";
-    header("Location: ./clubs.php");
-    exit();
 }
 ?>
 
@@ -42,33 +38,11 @@ if(isset($_GET['club_id'])) {
 </head>
 
 <body>  
-<?php include('../navbar.html') ?> 
-<div class="row justify-content-center mt-4">
-  <div class="col">
-    <div class="d-flex justify-content-center align-items-center">
-      <h3 class="mr-3">Add Club Member</h3>
-    </div>
-    <form class="search-bar" action="create-member-process.php?club_id=<?php echo $club_id; ?>" method="post">
-        <div class="form-group mb-3">
-            <label for="member-email">E-mail:</label>
-            <input type="email" class="mt-2 form-control" id="member-email" name="member-email" aria-describedby="email Help" placeholder="Enter member's e-mail...">
-        </div>
-        <div class="form-group mb-3">
-            <label for="member-privilege">Select Privilege:</label>
-            <select class="mt-2 form-control" id="member-privilege" name="member-privilege">
-                <option value="admin">ADMIN</option>
-                <option value="user">USER</option>
-            </select>
-        </div>
-        <button type="submit" name="create-member-button" value="Create" class="btn btn-primary">Add Member</button>
-    </form>
-  </div>
-</div>
+  <?php include('../navbar.html') ?> 
+  
 
 
-
-
-<br/><br/>
+  <br/><br/>
 
  
 
