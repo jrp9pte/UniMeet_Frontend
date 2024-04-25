@@ -265,5 +265,128 @@ function updateMember($club_id, $email, $privilege){
     $statement->closeCursor();
     // return $result;
 }
+// Stored procedure 
+// function createEvent($location, $event_date, $event_description, $event_category){
+//     global $db;
+//     $query = "INSERT INTO events (location, event_date, event_description, event_category) VALUES (:location, :event_date, :event_description, :event_category)";
+//     $statement = $db->prepare($query);
+//     $statement->bindValue(':location', $location);
+//     $statement->bindValue(':event_date', $event_date);
+//     $statement->bindValue(':event_description', $event_description);
+//     $statement->bindValue(':event_category', $event_category);
+//     $result = $statement->execute();
+//     $lastInsertedId = $db->lastInsertId();
+//     $statement->closeCursor();
+//     return $lastInsertedId;
+
+// }
+
+function createLocation($capacity, $location_address){
+//    INSERT INTO locations(capacity, address) VALUES (capacity, address);
+    global $db;
+    $query = "INSERT INTO locations (capacity, location_address) VALUES (:capacity, :location_address)";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':capacity', $capacity);
+    $statement->bindValue(':location_address', $location_address);
+    $result = $statement->execute();
+    $lastInsertedId = $db->lastInsertId();
+    $statement->closeCursor();
+    return $lastInsertedId;
+}
+
+function getLocation($location_id){
+    global $db;
+    $query = "SELECT * FROM locations WHERE location_id=:location_id";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':location_id', $location_id);
+    $statement->execute();
+    $result = $statement->fetch();
+    $statement->closeCursor();
+    return $result;
+}
+
+function getAllLocations(){
+    global $db;
+    $query = "SELECT location_id FROM locations";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $result = $statement->fetchAll();
+    $statement->closeCursor();
+    return $result;
+}
+
+function getEvent($event_id){
+    global $db;
+    $query = "SELECT * FROM events NATURAL JOIN locations NATURAL JOIN club_of WHERE event_id=:event_id";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->execute();
+    $result = $statement->fetch();
+    $statement->closeCursor();
+    return $result;
+}
+// GetEvent(event_id):
+// SELECT * FROM events NATURAL JOIN locations NATURAL JOIN club_of WHERE event_id=event_id;
+
+
+// UpdateEventDescription(event_id, event_description);
+// UPDATE events SET event_description=event_description WHERE event_id=event_id;
+
+function updateEventDescription($event_id, $event_description){
+    global $db;
+    $query = "UPDATE events SET event_description=:event_description WHERE event_id=:event_id";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->bindValue(':event_description', $event_description);
+    $statement->execute();
+    $statement->closeCursor();
+}
+
+//  8 UpdateEventDate(event_id, event_date);
+// UPDATE events SET date=event_date WHERE event_id=event_id;
+function updateEventDate($event_id, $event_date){
+    global $db;
+    $query = "UPDATE events SET event_date=:event_date WHERE event_id=:event_id";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->bindValue(':event_date', $event_date);
+    $statement->execute();
+    $statement->closeCursor();
+}
+// 9 UpdateEventClub(event_id, club_id):
+// DELETE FROM club_of WHERE event_id = event_id;
+// INSERT INTO club_of(event_id, club_id) VALUES (event_id, club_id)
+function updateEventClub($event_id, $club_id){
+    global $db;
+    $query = "DELETE FROM club_of WHERE event_id=:event_id";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->execute();
+    $statement->closeCursor();
+    $query = "INSERT INTO club_of (event_id, club_id) VALUES (:event_id, :club_id)";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->bindValue(':club_id', $club_id);
+    $statement->execute();
+    $statement->closeCursor();
+}
+
+// 10 UpdateLocationCapacity(location_id, capacity):
+// UPDATE locations SET capacity=capacity WHERE location_id=location_id;
+
+function updateLocationCapacity($location_id, $capacity){
+    global $db;
+    $query = "UPDATE locations SET capacity=:capacity WHERE location_id=:location_id";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':location_id', $location_id);
+    $statement->bindValue(':capacity', $capacity);
+    $statement->execute();
+    $statement->closeCursor();
+}
+
+
+
+
+
 
 ?>
