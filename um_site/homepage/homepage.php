@@ -1,6 +1,6 @@
 <?php
-require("connect-db.php");
-require("unimeet-db.php");
+require("../database/connect-db.php");
+require("../database/unimeet-db.php");
 ?>
 
 <?php
@@ -13,7 +13,7 @@ if(isset($_SESSION['username'])) {
   //var_dump($list_of_events);
 } else {
   // Redirect to login page or handle unauthorized access
-  header("Location: login.php");
+  header("Location: ../login_page/login.php");
   exit();
 }
 ?>
