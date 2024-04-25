@@ -697,10 +697,10 @@ function getEventCategories($event_id){
 
 // 38 UpdateClubCategory(club_id, club_category):
 // No sql just use AddclubCategory and RemoveClubCategory
-function updateClubCategory($club_id, $club_category){
-    removeClubCategory($club_id, $club_category);
-    addClubCategory($club_id, $club_category);
-}
+// function updateClubCategory($club_id, $club_category){
+//     removeClubCategory($club_id, $club_category);
+//     addClubCategory($club_id, $club_category);
+// }
 
 //39 UpdateEventCategory(event_id, list_event_category):
 // No sql just use AddEventCategory and RemoveEventCategory
@@ -746,7 +746,16 @@ function hasReservation($user_email, $event_id){
     $statement->execute();
     $result = $statement->fetch();
     $statement->closeCursor();
-    return $result > 0;
+    return $result[0] > 0;
 }
 
-?>
+function getEventCurrentCapacity($event_id){
+    global $db;
+    $query = "SELECT COUNT(*) FROM reservations WHERE event_id = :event_id";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->execute();
+    $result = $statement->fetch();
+    $statement->closeCursor();
+    return $result[0];
+}
