@@ -263,7 +263,7 @@ function updateMember($club_id, $email, $privilege){
     $statement->bindValue(':privilege', $privilege);
     $statement->execute();
     $statement->closeCursor();
-    return $result;
+    // return $result;
 }
 
 ?>
