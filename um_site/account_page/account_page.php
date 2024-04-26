@@ -46,47 +46,45 @@ if(isset($_SESSION['username'])) {
 <body>  
   <?php include('../navbar.html') ?> 
   
-  <div class="container">
-  <h1 class="text-center mt-4">Profile</h1>
-  <div class="row mt-5 justify-content-center">
+  <style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 60vh; /* This will center the container vertically */
+  }
 
-    <div class="col-md-6 mb-4">
-      <div class="rounded bg-light p-3 d-flex justify-content-between align-items-center">
-        <h4>Email: <?php echo $email; ?></h4>
-        <button class="btn btn-primary">Edit</button>
-      </div>
-    </div>
+  .profile-item {
+    margin-bottom: 1.5em; /* This will add more vertical space between the lines */
+  }
 
-    <div class="w-100"></div> <!-- Add a new row -->
+  input[readonly] {
+    background-color: #f0f0f0;
+    margin-right: 1em; /* This will add more horizontal space between the text boxes and the edit buttons */
+  }
 
-    <div class="col-md-6 mb-4">
-      <div class="rounded bg-light p-3 d-flex justify-content-between align-items-center">
-        <h4>Password: <span class="password-censored"><?php echo $censored; ?></span></h4>
-        <button class="btn btn-primary">Edit</button>
-      </div>
-    </div>
+  .btn {
+    width: 200px; /* This will make the buttons as large as the text boxes */
+  }
+</style>
+<h1 class="text-center mt-4" style="font-size: 2.5em;">Profile</h1>
+<div class="container">
     
-    <div class="w-100"></div> <!-- Add a new row -->
-
-    <div class="col-md-6 mb-4">
-      <div class="rounded bg-light p-3 d-flex justify-content-between align-items-center">
-        <h4>First Name: <?php echo $first_name; ?></h4>
-        <button class="btn btn-primary">Edit</button>
+    <div class="profile-container text-center" style="font-size: 1.8em;">
+      <div class="profile-item">
+        First Name: <input type="text" value="Test" readonly> <button class="btn btn-primary edit-button">Edit</button>
+      </div>
+      <div class="profile-item">
+        Last Name: <input type="text" value="User" readonly> <button class="btn btn-primary edit-button">Edit</button>
+      </div>
+      <div class="profile-item">
+        Email: <input type="text" value="test@gmail.com" readonly> <button class="btn btn-primary edit-button">Edit</button>
+      </div>
+      <div class="profile-item">
+        <button class="btn btn-primary edit-button">Edit Password</button>
       </div>
     </div>
-
-    <div class="w-100"></div> <!-- Add a new row -->
-
-    <div class="col-md-6 mb-4">
-      <div class="rounded bg-light p-3 d-flex justify-content-between align-items-center">
-        <h4>Last Name: <?php echo $last_name; ?></h4>
-        <button class="btn btn-primary">Edit</button>
-      </div>
-    </div>
-    
-  </div>
 </div>
-
 
 
 
