@@ -270,20 +270,22 @@ function updateMember($club_id, $email, $privilege){
     // return $result;
 }
 // Stored procedure 
-// function createEvent($location, $event_date, $event_description, $event_category){
-//     global $db;
-//     $query = "INSERT INTO events (location, event_date, event_description, event_category) VALUES (:location, :event_date, :event_description, :event_category)";
-//     $statement = $db->prepare($query);
-//     $statement->bindValue(':location', $location);
-//     $statement->bindValue(':event_date', $event_date);
-//     $statement->bindValue(':event_description', $event_description);
-//     $statement->bindValue(':event_category', $event_category);
-//     $result = $statement->execute();
-//     $lastInsertedId = $db->lastInsertId();
-//     $statement->closeCursor();
-//     return $lastInsertedId;
+function createEvent($location, $event_date, $event_description, $event_category, $user_email, $club){
+    global $db;
+    $query = "CALL CreateEvent(:location, :event_date, :event_description, :event_category :user_email :club)";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':location', $location);
+    $statement->bindValue(':event_date', $event_date);
+    $statement->bindValue(':event_description', $event_description);
+    $statement->bindValue(':event_category', $event_category);
+    $statement->bindValue(':user_email', $user_email);
+    $statement->bindValue(':club', $club);
+    $result = $statement->execute();
+    $lastInsertedId = $db->lastInsertId();
+    $statement->closeCursor();
+    return $lastInsertedId;
 
-// }
+}
 
 function createLocation($capacity, $location_address){
 //    INSERT INTO locations(capacity, address) VALUES (capacity, address);
@@ -307,6 +309,11 @@ function getLocation($location_id){
     $statement->execute();
     $result = $statement->fetch();
     $statement->closeCursor();
+    // will change given object
+    // $json = json_encode($result, JSON_PRETTY_PRINT);
+    //         echo "<script>
+    //         console.log( $json);
+    //         </script>";
     return $result;
 }
 
@@ -315,7 +322,7 @@ function getAllLocations(){
     $query = "SELECT location_id FROM locations";
     $statement = $db->prepare($query);
     $statement->execute();
-    $result = $statement->fetchAll();
+    $result = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
     $statement->closeCursor();
     return $result;
 }
@@ -411,7 +418,10 @@ function getAllEventsUserIsAdminOf($user_email){
     $statement->execute();
     $result = $statement->fetchAll();
     $statement->closeCursor();
-    return $result;
+    $ids = array_map(function($item) {
+        return $item['event_id'];
+    }, $result);    
+    return $ids;
 }
 
 // 13 GetClub(club_id):
