@@ -23,6 +23,25 @@ if(isset($_SESSION['username'])) {
   header("Location: ../login_page/login.php");
   exit();
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  // Get the updated values from the form
+
+  $first_name = $_POST['first_name'];
+  $last_name = $_POST['last_name'];
+  $email = $_POST['email'];
+
+
+  
+
+  // Update the user information in the database
+  updateAccount($username, $first_name, $last_name, $email);
+
+  echo '<pre>';
+    print_r($_POST);
+    echo '</pre>';
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -41,50 +60,83 @@ if(isset($_SESSION['username'])) {
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">  
   <link rel="stylesheet" href="../unimeet.css">
+
+  <style>
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 60vh; /* This will center the container vertically */
+    }
+
+    .profile-item {
+      margin-bottom: 1.5em; /* This will add more vertical space between the lines */
+    }
+
+    input[readonly] {
+      background-color: #f0f0f0;
+      margin-right: 1em; /* This will add more horizontal space between the text boxes and the edit buttons */
+    }
+
+    .btn {
+      width: 200px; /* This will make the buttons as large as the text boxes */
+    }
+  </style>
 </head>
+
 
 <body>  
   <?php include('../navbar.html') ?> 
-  
-  <style>
-  .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 60vh; /* This will center the container vertically */
-  }
 
-  .profile-item {
-    margin-bottom: 1.5em; /* This will add more vertical space between the lines */
-  }
+  <h1 class="text-center mt-4" style="font-size: 2.5em;">Profile</h1>
+  <div class="container">
+    <form method="post">
+      <div class="profile-container text-center" style="font-size: 1.8em;">
+        <div class="profile-item">
+          First Name: <input type="text" name="first_name" value="<?php echo $first_name; ?>" readonly> <button type="button" class="btn btn-primary edit-button">Edit</button>
+        </div>
+        <div class="profile-item">
+          Last Name: <input type="text" name="last_name" value="<?php echo $last_name; ?>" readonly> <button type="button" class="btn btn-primary edit-button">Edit</button>
+        </div>
+        <div class="profile-item">
+          Email: <input type="text" name="email" value="<?php echo $email; ?>" readonly> <button type="button" class="btn btn-primary edit-button">Edit</button>
+        </div>
+        <div class="profile-item">
+          <button class="btn btn-primary">Change Password</button>
+        </div>
+        <div class="profile-item">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </div>
+    </form>
+  </div>
 
-  input[readonly] {
-    background-color: #f0f0f0;
-    margin-right: 1em; /* This will add more horizontal space between the text boxes and the edit buttons */
+  <script>
+    window.onload = function() {
+  var editButtons = document.getElementsByClassName('edit-button');
+  for (var i = 0; i < editButtons.length; i++) {
+    editButtons[i].addEventListener('click', function() {
+      var input = this.previousElementSibling;
+      if (this.textContent === 'Edit') {
+        // Store the current value to revert back if needed
+        input.dataset.oldValue = input.value;
+        input.readOnly = false;
+        input.focus();
+        this.textContent = 'Cancel'; // Change the button text
+      } else {
+        // Revert the value and make the input field read-only
+        input.value = input.dataset.oldValue;
+        input.readOnly = true;
+        this.textContent = 'Edit'; // Change the button text back to 'Edit'
+      }
+    });
   }
+}
 
-  .btn {
-    width: 200px; /* This will make the buttons as large as the text boxes */
-  }
-</style>
-<h1 class="text-center mt-4" style="font-size: 2.5em;">Profile</h1>
-<div class="container">
-    
-    <div class="profile-container text-center" style="font-size: 1.8em;">
-      <div class="profile-item">
-        First Name: <input type="text" value="Test" readonly> <button class="btn btn-primary edit-button">Edit</button>
-      </div>
-      <div class="profile-item">
-        Last Name: <input type="text" value="User" readonly> <button class="btn btn-primary edit-button">Edit</button>
-      </div>
-      <div class="profile-item">
-        Email: <input type="text" value="test@gmail.com" readonly> <button class="btn btn-primary edit-button">Edit</button>
-      </div>
-      <div class="profile-item">
-        <button class="btn btn-primary edit-button">Edit Password</button>
-      </div>
-    </div>
-</div>
+  </script>
+</body>
+
+
 
 
 

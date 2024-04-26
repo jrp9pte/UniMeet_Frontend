@@ -269,6 +269,20 @@ function updateMember($club_id, $email, $privilege){
     $statement->closeCursor();
     // return $result;
 }
+
+function updateAccount($email, $first_name, $last_name) {
+    global $db;
+    $query = "UPDATE accounts SET first_name = :first_name, last_name = :last_name WHERE email = :email";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':email', $email);
+    $statement->bindValue(':first_name', $first_name);
+    $statement->bindValue(':last_name', $last_name);
+    $result = $statement->execute();
+    $statement->closeCursor();
+    return $result;
+}
+
+
 // Stored procedure 
 // function createEvent($location, $event_date, $event_description, $event_category){
 //     global $db;
