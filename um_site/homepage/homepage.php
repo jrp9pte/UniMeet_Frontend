@@ -12,8 +12,9 @@ if(isset($_SESSION['username'])) {
   $list_of_events = array_map(function($eventId) {
     return getEvent($eventId);
 }, $list_of_events);
-  var_dump($list_of_events);
+  // var_dump($list_of_events);
   $list_of_clubs = getClubsByAccount($username);
+  // var_dump($list_of_clubs);
   //var_dump($list_of_events);
 } else {
   // Redirect to login page or handle unauthorized access
