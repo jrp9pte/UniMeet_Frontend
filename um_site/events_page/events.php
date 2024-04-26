@@ -12,6 +12,7 @@ if(isset($_SESSION['username'])) {
   // console log the list of events
   // var_dump($list_of_events);
   $list_of_user_event_ids = getEventsByAccount($username);
+  $list_of_my_events = getAllEventsUserIsAdminOf($username);
 //   var_dump($list_of_user_event_ids);
 //   $json = json_encode($list_of_user_event_ids, JSON_PRETTY_PRINT);
 //             echo "<script>
@@ -138,6 +139,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <a style="max-width: fit-content; margin-left: auto; margin-right: auto;"
                                 href="event-details.php?event_id=<?php echo $event_info['event_id'] ?>"
                                 class="btn btn-warning d-block">View Details...</a>
+                            <!--Uncomment for real version,need this for now to be able to access  -->
+                            <!-- <?php if (in_array($event_info['event_id'], $list_of_my_events)): ?> -->
+                            <a style="max-width: fit-content; margin-left: auto; margin-right: auto;"
+                                href="event-details.php?event_id=<?php echo $event_info['event_id'] ?>"
+                                class="btn btn-warning d-block">View Details...</a>
+                            <!-- <?php endif; ?> -->
                         </div>
                     </div>
                 </div>
