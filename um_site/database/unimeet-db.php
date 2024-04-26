@@ -291,19 +291,31 @@ function updateMember($club_id, $email, $privilege){
     // return $result;
 }
 
-function updateAccount($email, $password, $first_name, $last_name) {
+function updateAccount($email, $first_name, $last_name) {
     global $db;
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $query = "UPDATE accounts SET first_name = :first_name, last_name = :last_name, password = :password WHERE email = :email";
+    $query = "UPDATE accounts SET first_name = :first_name, last_name = :last_name WHERE email = :email";
     $statement = $db->prepare($query);
     $statement->bindValue(':email', $email);
     $statement->bindValue(':first_name', $first_name);
     $statement->bindValue(':last_name', $last_name);
+    $result = $statement->execute();
+    $statement->closeCursor();
+    return $result;
+}
+
+function updatePassword($email, $password) {
+    global $db;
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    $query = "UPDATE accounts SET password = :password WHERE email = :email";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':email', $email);
     $statement->bindValue(':password', $hashed_password);
     $result = $statement->execute();
     $statement->closeCursor();
     return $result;
 }
+
 
 
 // Stored procedure 

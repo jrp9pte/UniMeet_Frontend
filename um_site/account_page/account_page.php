@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
 
   // Update the user information in the database
-  updateAccount($email, $password, $first_name, $last_name);
+  updateAccount($email, $first_name, $last_name);
 
 
 }

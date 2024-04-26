@@ -23,7 +23,7 @@ if(isset($_SESSION['username'])) {
         if ($oldPassword === $newPassword) {
           $message = "New password must be different from the old password!";
         }  else { 
-          updateAccount($email, $newPassword, $first_name, $last_name);
+          updatePassword($email, $newPassword);
           $message = "Password changed successfully!";
         } 
       } else {
