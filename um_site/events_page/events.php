@@ -25,7 +25,7 @@ if(isset($_SESSION['username'])) {
 }
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
   if(!empty($_POST['search-button'])){
-    $list_of_clubs = getClubsByFilter($_POST['search-filter']);
+    $list_of_events = getEventsByFilter($_POST['search-filter']);
   }
   else if(!empty($_POST['leave-button'])){
     // deleteMember($_POST['club_id'], $username);
@@ -81,18 +81,27 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </a>
             </div>
-            <form action="clubs.php" method="post" class="search-bar">
+            <form action="events.php" method="post" class="search-bar">
                 <div class="input-group mb-3">
                     <input type="text" name="search-filter" class="form-control" placeholder="Search Events..."
-                        aria-label="Search Events..." aria-describedby="button-addon2">
+                        aria-label="Search Events..." aria-describedby="button-addon2"
+                        value="<?php echo isset($_POST['search-filter']) ? $_POST['search-filter'] : ''; ?>">
                     <div class="input-group-append">
                         <button class="btn search-button" type="submit" name="search-button" value="Search"
                             id="button-addon2"><i class="mdi mdi-magnify search-icon"></i></button>
                     </div>
                 </div>
             </form>
-
+            <!-- Reset button -->
             <!--Cards  -->
+            <?php if (empty($list_of_events)): ?>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">No Events</h5>
+                    <p class="card-text">There are currently no events available for selected options</p>
+                </div>
+            </div>
+            <?php endif; ?>
             <?php foreach ($list_of_events as $event_info): ?>
             <!-- <?php $json = json_encode((($event_info)), JSON_PRETTY_PRINT);
             echo "<script>
@@ -117,6 +126,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                             <p style="max-width: fit-content; margin-left: auto; margin-right: auto;" class="card-text">
                                 <span
+                                    style="color: <?php echo (getEventCurrentCapacity($event_info['event_id']) == $event_info['capacity']) ? 'red' : ''; ?>"
                                     class="spots-remaining"><?php echo getEventCurrentCapacity($event_info['event_id']); ?></span>/<?php echo ($event_info['capacity']); ?>
                                 Spots Filled
                             </p>

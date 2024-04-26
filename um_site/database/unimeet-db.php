@@ -195,6 +195,27 @@ function getClubsByFilter($filter)
     }
 }
 
+function getEventsByFilter($filter){
+    global $db;
+    $patternFilter = "%".$filter."%";
+    $query = "SELECT * FROM events NATURAL JOIN locations NATURAL JOIN club_of WHERE event_description LIKE :patternFilter";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':patternFilter', $patternFilter);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) 
+    {
+        $e->getMessage();
+    } catch (Exception $e)
+    {
+        $e->getMessage();
+    }
+
+}
+
 function getEventsByAccount($email){
     global $db;
     $query = "SELECT event_id FROM reservations NATURAL JOIN events NATURAL JOIN event_categories NATURAL JOIN locations NATURAL JOIN club_of NATURAL JOIN clubs WHERE email=:email";
