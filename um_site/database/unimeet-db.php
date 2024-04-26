@@ -195,17 +195,20 @@ function getClubsByFilter($filter)
     }
 }
 
-function getEventsByAccount($email)
-{
+function getEventsByAccount($email){
     global $db;
-    $query = "SELECT * FROM reservations NATURAL JOIN events NATURAL JOIN event_categories NATURAL JOIN locations NATURAL JOIN club_of NATURAL JOIN clubs WHERE email=:email";
+    $query = "SELECT event_id FROM reservations NATURAL JOIN events NATURAL JOIN event_categories NATURAL JOIN locations NATURAL JOIN club_of NATURAL JOIN clubs WHERE email=:email";
     try {
         $statement = $db->prepare($query);
         $statement->bindValue(':email', $email);
         $statement->execute();
         $result = $statement->fetchAll();
         $statement->closeCursor();
-        return $result;
+        $ids = array_map(function($item) {
+        return $item['event_id'];
+}, $result);    
+        return $ids;
+        
     } catch (PDOException $e) 
     {
         $e->getMessage();
@@ -556,7 +559,7 @@ function getReservations($user_email){
 // After executing query below, check if query returns value > 0, return true, else, false
 // SELECT COUNT(*) FROM admin_of WHERE event_ID = event_id AND email = user_email;
 function isMyEvent($event_id, $user_email){
-    echo "<script>console.log('In isMyEvent');</script>";
+    // echo "<script>console.log('In isMyEvent');</script>";
     global $db;
     $query = "SELECT COUNT(*) FROM admin_of WHERE event_id = :event_id AND email = :user_email";
     $statement = $db->prepare($query);
@@ -565,7 +568,7 @@ function isMyEvent($event_id, $user_email){
     $statement->execute();
     $result = $statement->fetch();
     $statement->closeCursor();
-    return $result > 0;
+    return $result[0] > 0;
 }
 
 // 26 DeleteAdminFromEvent(admin_email, event_id):
@@ -588,6 +591,23 @@ function deleteAdminFromEvent($admin_email, $event_id){
 // 28 DeleteReservation(user_email, event_id):
 // Check if not admin
 // DELETE FROM reservations WHERE email = user_email AND event_id = event_id;
+function deleteReservation($user_email, $event_id){
+    $json = json_encode((isMyEvent($event_id, $user_email)), JSON_PRETTY_PRINT);
+            echo "<script>
+            console.log( $json);
+            </script>";
+    if (isMyEvent($event_id, $user_email)){
+        return false;
+    }
+    global $db;
+    $query = "DELETE FROM reservations WHERE email = :user_email AND event_id = :event_id";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':user_email', $user_email);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->execute();
+    $statement->closeCursor();
+    return true;
+}
 
 // 29 DeleteUser(user_email):
 // Check if not sole admin of club or event
@@ -600,16 +620,16 @@ function deleteAdminFromEvent($admin_email, $event_id){
 // DELETE FROM locations WHERE location_id = location_id;
 // Might have bug with this way im checking
 // function deleteLocation($location_id){
-//     // if getEvent($location_id);
-//     if (getEvent($location_id)){
-//         return false;
-//     }
-//     global $db;
-//     $query = "DELETE FROM locations WHERE location_id = :location_id";
-//     $statement = $db->prepare($query);
-//     $statement->bindValue(':location_id', $location_id);
-//     $statement->execute();
-//     $statement->closeCursor();
+// // if getEvent($location_id);
+// if (getEvent($location_id)){
+// return false;
+// }
+// global $db;
+// $query = "DELETE FROM locations WHERE location_id = :location_id";
+// $statement = $db->prepare($query);
+// $statement->bindValue(':location_id', $location_id);
+// $statement->execute();
+// $statement->closeCursor();
 // }
 
 //31 DeleteClub(club_id):
@@ -621,15 +641,15 @@ function deleteAdminFromEvent($admin_email, $event_id){
 // Check if exists
 // INSERT INTO club_categories( club_category, club_id) VALUES ( club_category, club_id);
 // function addClubCategory($club_id, $club_category){
-// //    Do check if club exists and category exists
-//     global $db;
-//     $query = "INSERT INTO club_categories (club_id, category_name) VALUES (:club_id, :club_category)";
-//     $statement = $db->prepare($query);
-//     $statement->bindValue(':club_id', $club_id);
-//     $statement->bindValue(':club_category', $club_category);
-//     $result = $statement->execute();
-//     $statement->closeCursor();
-//     return $result;
+// // Do check if club exists and category exists
+// global $db;
+// $query = "INSERT INTO club_categories (club_id, category_name) VALUES (:club_id, :club_category)";
+// $statement = $db->prepare($query);
+// $statement->bindValue(':club_id', $club_id);
+// $statement->bindValue(':club_category', $club_category);
+// $result = $statement->execute();
+// $statement->closeCursor();
+// return $result;
 // }
 
 // 33 RemoveClubCategory(club_id, club_category):
@@ -667,7 +687,7 @@ function removeEventCategory($event_id, $event_category){
     $statement->bindValue(':event_category', $event_category);
     $statement->execute();
     $statement->closeCursor();
-}
+    }
 
 // 36 GetClubCategories(club_id):
 // SELECT category_name FROM club_categories WHERE club_id = club_id;
@@ -685,28 +705,28 @@ function getClubCategories($club_id){
 // 37 GetEventCategories(event_id):
 // SELECT category_name FROM event_categories WHERE event_id = club_id;
 function getEventCategories($event_id){
-    global $db;
-    $query = "SELECT category_name FROM event_categories WHERE event_id = :event_id";
-    $statement = $db->prepare($query);
-    $statement->bindValue(':event_id', $event_id);
-    $statement->execute();
-    $result = $statement->fetchAll();
-    $statement->closeCursor();
-    return $result;
+global $db;
+$query = "SELECT category_name FROM event_categories WHERE event_id = :event_id";
+$statement = $db->prepare($query);
+$statement->bindValue(':event_id', $event_id);
+$statement->execute();
+$result = $statement->fetchAll();
+$statement->closeCursor();
+return $result;
 }
 
 // 38 UpdateClubCategory(club_id, club_category):
 // No sql just use AddclubCategory and RemoveClubCategory
-function updateClubCategory($club_id, $club_category){
-    removeClubCategory($club_id, $club_category);
-    addClubCategory($club_id, $club_category);
-}
+// function updateClubCategory($club_id, $club_category){
+// removeClubCategory($club_id, $club_category);
+// addClubCategory($club_id, $club_category);
+// }
 
 //39 UpdateEventCategory(event_id, list_event_category):
 // No sql just use AddEventCategory and RemoveEventCategory
 function updateEventCategory($event_id, $event_category){
-    removeEventCategory($event_id, $event_category);
-    addEventCategory($event_id, $event_category);
+removeEventCategory($event_id, $event_category);
+addEventCategory($event_id, $event_category);
 }
 
 // 40 CreateReservation(user_email, event_id):
@@ -714,10 +734,20 @@ function updateEventCategory($event_id, $event_category){
 // Check HasReservation(user_email, event_id)
 // INSERT INTO reservations(event_id, email) VALUES (event_id, user_email);
 function createReservation($event_id, $user_email ){
-    // consolelog 
-    echo "<script>console.log('In createReservation');</script>";
-    // $ismyevent = isMyEvent($event_id, $user_email)
-    // echo "<script>console.log('$ismyevent ');</script>";
+
+    // echo "<script>
+    // console.log('In createReservation'); < /script>";
+    // // $ismyevent = isMyEvent($event_id, $user_email)
+    // // echo "<script>console.log('$ismyevent ');
+    // </script>";
+    var_dump(isMyEvent($event_id, $user_email));
+    $json = json_encode((isMyEvent($event_id, $user_email)), JSON_PRETTY_PRINT);
+        echo "<script>
+                console.log( $json);
+            </script>";
+    if (isMyEvent($event_id, $user_email)){
+    return false;
+    }
     if(isMyEvent($event_id, $user_email)){
         return false;
     }
@@ -734,7 +764,7 @@ function createReservation($event_id, $user_email ){
     return $result;
 }
 
-//41 hasReservation(user_email, event_id): 
+//41 hasReservation(user_email, event_id):
 // After executing query below, check if query returns value > 0, return true, else, false
 // SELECT COUNT(*) FROM reservations WHERE email = user_email AND event_id = event_id;
 function hasReservation($user_email, $event_id){
@@ -746,7 +776,16 @@ function hasReservation($user_email, $event_id){
     $statement->execute();
     $result = $statement->fetch();
     $statement->closeCursor();
-    return $result > 0;
+    return $result[0] > 0;
 }
 
-?>
+function getEventCurrentCapacity($event_id){
+global $db;
+$query = "SELECT COUNT(*) FROM reservations WHERE event_id = :event_id";
+$statement = $db->prepare($query);
+$statement->bindValue(':event_id', $event_id);
+$statement->execute();
+$result = $statement->fetch();
+$statement->closeCursor();
+return $result[0];
+}
