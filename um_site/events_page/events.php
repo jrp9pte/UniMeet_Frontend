@@ -89,6 +89,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="input-group-append">
                         <button class="btn search-button" type="submit" name="search-button" value="Search"
                             id="button-addon2"><i class="mdi mdi-magnify search-icon"></i></button>
+                        <?php if (!empty($_POST['search-filter'])): ?>
+                        <button class="btn clear-button" type="button" onclick="location.href='events.php'"><i
+                                class="mdi mdi-close-circle-outline clear-icon"></i></button>
+                        <?php endif; ?>
                     </div>
                 </div>
             </form>
@@ -115,7 +119,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <?php echo $event_info['event_description']; ?></h4>
                             <p class="card-text"><?php echo $event_info['address']; ?></p>
                             <p class="card-text"><?php echo getClubByID($event_info['club_id'])[1]; ?></p>
-                            <p class="card-text">Category: <?php echo getClubByID($event_info['club_id'])[2]; ?></p>
+                            <p class="card-text">Category:
+                                <?php echo getClubByID($event_info['club_id'])[2]; ?></p>
                         </div>
 
                         <div style="max-width: fit-content; margin: auto; text-align: left ">
