@@ -13,10 +13,15 @@ if(isset($_SESSION['username'])) {
   exit();
 }
 if(isset($_GET['event_id'])) {
-    $club_id = $_GET['event_id'];
+    $event_id = $_GET['event_id'];
     $club = getClubByID($club_id);
     $club_events = getEventsByClub($club_id);
     $event_members = getMembersByClub($club_id);
+    $event_details = getEventDetails($event_id);
+    $reservations = getReservationsForEvent($event_id);
+    echo '<pre>';
+    print_r($event_details);
+    echo '</pre>';
     $privilege = 'user';
     foreach ($club_members as $item){
       if($item['email'] === $username){
@@ -27,35 +32,6 @@ if(isset($_GET['event_id'])) {
     //var_dump($club_members);
 } else {
     echo "Event ID not provided.";
-}
-if($_SERVER['REQUEST_METHOD'] == 'POST') {
-  if(!empty($_POST['remove-button'])){
-    if($_POST['email'] === $username){
-      echo '<script>alert("Error: Unable to delete yourself as a member.")</script>'; 
-    }
-    else{
-      deleteMember($club_id, $_POST['email']);
-      $club_members = getMembersByClub($club_id);
-    }
-  }
-  else if(!empty($_POST['demote-button'])){
-    if($_POST['email'] === $username){
-      echo '<script>alert("Error: Unable to edit your own role as a member.")</script>'; 
-    }
-    else{
-      updateMember($club_id, $_POST['email'], 'user');
-      $club_members = getMembersByClub($club_id);
-    }
-  }
-  else if(!empty($_POST['promote-button'])){
-    if($_POST['email'] === $username){
-      echo '<script>alert("Error: Unable to edit your own role as a member.")</script>'; 
-    }
-    else{
-      updateMember($club_id, $_POST['email'], 'admin');
-      $club_members = getMembersByClub($club_id);
-    }
-  }
 }
 ?>
 
@@ -84,44 +60,49 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <?php include('../navbar.html') ?>
     <div class="mt-4">
-        <h3 class="row justify-content-center"><?php echo $club['club_description']?></h3>
-        <h4 class="row justify-content-center details-club"><?php echo $club['category_name']?></h4>
+      <h3 class="text-center"><?php echo $event_details['event_description']; ?></h3>
+      <div class="row justify-content-center align-items-center">
+        <div class="col-auto text-center">
+            <h4 class="d-inline"><?php echo $event_details['club_description']; ?></h4>
+        </div>
+        <div class="col-auto">
+            <a href="../club_page/club-details.php?club_id=<?php $event_details['club_id']; ?>">
+                <i class="mdi mdi-information-outline" style="font-size: 24px;"></i>
+            </a>
+        </div>
+      </div>
     </div>
+</div>
     <div class="row justify-content-center mt-4">
         <div class="col">
-            <div class="d-flex justify-content-center align-items-center">
-                <h3 class="mr-3">Events</h3>
-                <a class="nav-item nav-link active" href="../events_page/create-event.php">
-                    <div class="icon-wrapper">
-                        <i class="mdi mdi-plus add-icon"></i>
-                    </div>
-                </a>
-            </div>
-            <?php foreach ($club_events as $event_info): ?>
-            <div class="card">
-                <div class="row">
-                    <div class="col">
-                        <h4 class="card-title event-name"><?php echo $event_info['event_description']?></h4>
-                        <h6 class="card-subtitle mb-2"><?php echo $event_info['address']?></h6>
-                        <h6 class="card-subtitle mb-2"><?php echo $event_info['club_description']?></h6>
-                        <h6 class="card-subtitle mb-2"><?php echo $event_info['category_name']?></h6>
-                    </div>
-                    <div class="col text-end card-right-col">
-                        <h3 class="card-time card-title text-right">
-                            <?php echo date("d-m-Y", strtotime($event_info['date']))?></h3>
-                    </div>
-                </div>
-            </div>
-            <?php endforeach; ?>
+          <div class="d-flex justify-content-center align-items-center">
+              <h3 class="mr-3">Event Details</h3>
+          </div>
+          <div class="card mb-3">
+              <form action="edit_event.php" method="post">
+                  <div class="row">
+                      <div class="col-md-8">
+                          <input type="text" class="form-control mb-2" name="event_description" value="<?php echo$event_details['event_description']; ?>">
+                          <input type="text" class="form-control mb-2" name="address" value="<?php echo $event_details['address']; ?>">
+                          <input type="date" class="form-control mb-2" name="date" value="<?php echo $event_details['date']; ?>">
+                          <div class="mb-2">
+                            <label class="form-label">Club Description: <?php echo htmlspecialchars($event_details['club_description']); ?></label>
+                          </div>
+                          <div class="mb-2">
+                            <label class="form-label">Category Name: <?php echo htmlspecialchars($event_details['category_name']); ?></label>
+                          </div>
+                      </div>
+                      <div class="col-md-4 text-end">
+                          <button type="submit" class="btn btn-primary mb-2">Save Changes</button>
+                      </div>
+                  </div>
+                  <input type="hidden" name="event_id" value="<?php echo $event_info['event_id']; ?>">
+              </form>
+          </div>
         </div>
         <div class="col">
             <div class="d-flex justify-content-center align-items-center">
                 <h3 class="mr-3">Members</h3>
-                <!-- <a class="nav-item nav-link active" href="create-member.php?club_id=<?php echo $club_id; ?>">
-                    <div class="icon-wrapper">
-                        <i class="mdi mdi-plus add-icon"></i>
-                    </div>
-                </a> -->
             </div>
             <?php foreach ($members as $member_info): ?>
             <div class="card">
@@ -170,4 +151,4 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 </body>
 
-</html>
+</html> 

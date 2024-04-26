@@ -820,3 +820,25 @@ $result = $statement->fetch();
 $statement->closeCursor();
 return $result[0];
 }
+
+function getReservationsForEvent($event_id) {
+    global $db;
+    $query = "SELECT a.first_name, a.last_name, a.email FROM reservations r NATURAL JOIN accounts a WHERE r.event_id = :event_id";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->execute();
+    $result = $statement->fetchAll();
+    $statement->closeCursor();
+    return $result;
+}
+
+function getEventDetails($event_id) {
+    global $db;
+    $query = "SELECT e.event_id, e.event_description, c.club_description, l.address, l.capacity, c.club_id, cc.category_name FROM events e NATURAL JOIN locations l NATURAL JOIN club_of NATURAL JOIN clubs c NATURAL JOIN club_categories cc WHERE e.event_id = :event_id";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->execute();
+    $result = $statement->fetch();
+    $statement->closeCursor();
+    return $result;
+}
