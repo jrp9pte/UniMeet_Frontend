@@ -57,7 +57,7 @@ if(isset($_SESSION['username'])) {
             <div class="d-flex justify-content-center align-items-center">
                 <h3 class="mr-3">Create Event</h3>
             </div>
-            <form class="search-bar" action="create-club-process.php" method="post">
+            <form class="search-bar" action="create-event-process.php" method="post">
                 <div class="form-group mb-3">
                     <label for="event-name">Event Name:</label>
                     <input type="text" class="mt-2 form-control" id="event-name" name="event-name" required

@@ -418,7 +418,10 @@ function getAllEventsUserIsAdminOf($user_email){
     $statement->execute();
     $result = $statement->fetchAll();
     $statement->closeCursor();
-    return $result;
+    $ids = array_map(function($item) {
+        return $item['event_id'];
+    }, $result);    
+    return $ids;
 }
 
 // 13 GetClub(club_id):
