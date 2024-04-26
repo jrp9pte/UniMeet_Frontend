@@ -17,7 +17,8 @@ if(isset($_SESSION['username'])) {
   $last_name = $user_info['last_name'];
   $email = $user_info['email'];
   $password = $user_info['password'];
-  $censored = str_repeat('*', strlen($password));
+  
+
 } else {
   // Redirect to login page or handle unauthorized access
   header("Location: ../login_page/login.php");
@@ -26,16 +27,16 @@ if(isset($_SESSION['username'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Get the updated values from the form
-
+  var_dump($password);
   $first_name = $_POST['first_name'];
   $last_name = $_POST['last_name'];
   $email = $_POST['email'];
-
-
-  
+  $password = $_POST['password'];
+ 
 
   // Update the user information in the database
-  updateAccount($username, $first_name, $last_name, $email);
+  updateAccount($email, $password, $first_name, $last_name);
+  updateEmail($email, $password);
 
   echo '<pre>';
     print_r($_POST);
@@ -99,11 +100,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           Last Name: <input type="text" name="last_name" value="<?php echo $last_name; ?>" readonly> <button type="button" class="btn btn-primary edit-button">Edit</button>
         </div>
         <div class="profile-item">
-          Email: <input type="text" name="email" value="<?php echo $email; ?>" readonly> <button type="button" class="btn btn-primary edit-button">Edit</button>
+          Password: <input type="text" name="password" value="<?php "------" ?>" readonly> <button type="button" class="btn btn-primary edit-button">Edit</button>
         </div>
         <div class="profile-item">
-          <button class="btn btn-primary">Change Password</button>
+          Email: <input type="text" name="email" value="<?php echo $email; ?>" readonly> 
         </div>
+  
         <div class="profile-item">
           <button type="submit" class="btn btn-primary">Save Changes</button>
         </div>
