@@ -74,6 +74,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="input-group-append">
                         <button class="btn search-button" type="submit" name="search-button" value="Search"
                             id="button-addon2"><i class="mdi mdi-magnify search-icon"></i></button>
+                        <?php if (!empty($_POST['search-filter'])): ?>
+                        <button class="btn clear-button" type="button" onclick="location.href='clubs.php'"><i
+                                class="mdi mdi-close-circle-outline clear-icon"></i></button>
+                        <?php endif; ?>
                     </div>
                 </div>
             </form>
