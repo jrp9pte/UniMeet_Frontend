@@ -79,24 +79,25 @@ if(isset($_GET['event_id'])) {
               <h3 class="mr-3">Event Details</h3>
           </div>
           <div class="card mb-3">
-              <form action="edit_event.php" method="post">
+              <form action="edit-event.php" method="post">
                   <div class="row">
                       <div class="col-md-8">
                           <input type="text" class="form-control mb-2" name="event_description" value="<?php echo$event_details['event_description']; ?>">
                           <input type="text" class="form-control mb-2" name="address" value="<?php echo $event_details['address']; ?>">
                           <input type="date" class="form-control mb-2" name="date" value="<?php echo $event_details['date']; ?>">
+                          <input type="number" class="form-control mb-2" name="capacity" value="<?php echo $event_details['capacity']; ?>">
                           <div class="mb-2">
-                            <label class="form-label">Club Description: <?php echo htmlspecialchars($event_details['club_description']); ?></label>
+                            <label class="form-label">Club Description: <?php echo $event_details['club_description']; ?></label>
                           </div>
                           <div class="mb-2">
-                            <label class="form-label">Category Name: <?php echo htmlspecialchars($event_details['category_name']); ?></label>
+                            <label class="form-label">Category Name: <?php echo $event_details['category_name']; ?></label>
                           </div>
                       </div>
                       <div class="col-md-4 text-end">
-                          <button type="submit" class="btn btn-primary mb-2">Save Changes</button>
+                          <button type="submit" name="update-event-button" class="btn btn-primary mb-2">Update Event</button>
                       </div>
+                      <input type="hidden" name="event_id" value="<?php echo $event_details['event_id']; ?>">
                   </div>
-                  <input type="hidden" name="event_id" value="<?php echo $event_info['event_id']; ?>">
               </form>
           </div>
         </div>

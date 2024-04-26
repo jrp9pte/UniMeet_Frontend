@@ -834,11 +834,34 @@ function getReservationsForEvent($event_id) {
 
 function getEventDetails($event_id) {
     global $db;
-    $query = "SELECT e.event_id, e.event_description, c.club_description, l.address, l.capacity, c.club_id, cc.category_name FROM events e NATURAL JOIN locations l NATURAL JOIN club_of NATURAL JOIN clubs c NATURAL JOIN club_categories cc WHERE e.event_id = :event_id";
+    $query = "SELECT e.event_id, e.event_description, e.date, c.club_description, l.address, l.capacity, c.club_id, cc.category_name FROM events e NATURAL JOIN locations l NATURAL JOIN club_of NATURAL JOIN clubs c NATURAL JOIN club_categories cc WHERE e.event_id = :event_id";
     $statement = $db->prepare($query);
     $statement->bindValue(':event_id', $event_id);
     $statement->execute();
     $result = $statement->fetch();
     $statement->closeCursor();
     return $result;
+}
+
+function updateEventDetails ($event_id, $event_description, $date, $address, $capacity) {
+    global $db;
+    
+    $db->beginTransaction();
+
+    $lIDQuery = "SELECT location_id FROM events WHERE event_id = ?";
+    
+    $lIDStatement = $db->prepare($lIDQuery);
+    $lIDStatement ->execute([$event_id]);
+    $location_id = $lIDStatement -> fetchColumn();
+    $lQuery = "UPDATE locations SET address = ?, capacity = ? WHERE location_id = ?";
+    $lStatement = $db->prepare($lQuery);
+    $lStatement ->execute([$address, $capacity, $location_id]);
+
+    $eQuery = "UPDATE events SET event_description = ?, date = ? WHERE event_id = ?";
+    $eStatement = $db->prepare($eQuery);
+    $eStatement->execute([$event_description, $date, $event_id]);
+
+    $db->commit();
+
+    return true;
 }
