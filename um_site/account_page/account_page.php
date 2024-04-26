@@ -27,7 +27,7 @@ if(isset($_SESSION['username'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Get the updated values from the form
-  var_dump($password);
+  //var_dump($password);
   $first_name = $_POST['first_name'];
   $last_name = $_POST['last_name'];
   $email = $_POST['email'];
@@ -36,11 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // Update the user information in the database
   updateAccount($email, $password, $first_name, $last_name);
-  updateEmail($email, $password);
 
-  echo '<pre>';
-    print_r($_POST);
-    echo '</pre>';
+
 }
 
 ?>

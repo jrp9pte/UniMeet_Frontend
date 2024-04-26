@@ -285,19 +285,6 @@ function updateAccount($email, $password, $first_name, $last_name) {
 }
 
 
-function updateEmail($email, $password) {
-    global $db;
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $query = "UPDATE accounts SET email = :email WHERE password = :password";
-    $statement = $db->prepare($query);
-    $statement->bindValue(':email', $email);
-    $statement->bindValue(':password', $hashed_password);
-    $result = $statement->execute();
-    $statement->closeCursor();
-    return $result;
-}
-
-
 // Stored procedure 
 function createEvent($location, $event_date, $event_description, $event_category, $user_email, $club){
     global $db;
