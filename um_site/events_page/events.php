@@ -7,12 +7,16 @@ require("../database/unimeet-db.php");
 session_start();
 if(isset($_SESSION['username'])) {
   $username = $_SESSION['username'];
-  //var_dump($username);
+//   var_dump($username);
   $list_of_events = getAllEvents();
   // console log the list of events
   // var_dump($list_of_events);
   $list_of_user_event_ids = getEventsByAccount($username);
-  //var_dump($list_of_user_club_ids);
+//   var_dump($list_of_user_event_ids);
+//   $json = json_encode($list_of_user_event_ids, JSON_PRETTY_PRINT);
+//             echo "<script>
+//             console.log( $json);
+//             </script>";
 } else {
   // Redirect to login page or handle unauthorized access
   header("Location: ../login_page/login.php");
@@ -23,15 +27,20 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $list_of_clubs = getClubsByFilter($_POST['search-filter']);
   }
   else if(!empty($_POST['leave-button'])){
-    deleteMember($_POST['club_id'], $username);
-    $list_of_user_club_ids = getEventsByAccount($username);
+    // deleteMember($_POST['club_id'], $username);
+    // $list_of_user_club_ids = getEventsByAccount($username);
+    $result = deleteReservation($username, $_POST['event_id'] );
+    header("Location: ./events.php");
   }
   else if(!empty($_POST['join-button'])){
     // if user wants to join event
     // $result = createMember($_POST['event_id'], $username, 'user');
     $result = createReservation($_POST['event_id'], $username);
-    var_dump($result);
+    // var_dump("create reservation" , $result);
     $list_of_user_event_ids = getEventsByAccount($username);
+    // var_dump("list_of_user_event_ids", $result);
+    header("Location: ./events.php");
+    
   }
 }
 ?>
@@ -64,7 +73,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="row justify-content-center mt-4">
         <div class="col">
             <div class="d-flex justify-content-center align-items-center">
-                <h3 class="mr-3">Events(buggy as hell)</h3>
+                <h3 class="mr-3">Events</h3>
                 <a class="nav-item nav-link active" href="create-event.php">
                     <div class="icon-wrapper">
                         <i class="mdi mdi-plus add-icon"></i>
@@ -81,45 +90,55 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
             </form>
-            <!-- <?php echo "hi"?> -->
+
+            <!--Cards  -->
             <?php foreach ($list_of_events as $event_info): ?>
-            <?php $json = json_encode(getEventCurrentCapacity($event_info['event_id']), JSON_PRETTY_PRINT);
+            <!-- <?php $json = json_encode((($event_info)), JSON_PRETTY_PRINT);
             echo "<script>
             console.log($json);
-            </script>"; ?>
+            </script>"; ?> -->
             <div class="card mb-3">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <h4 class="card-title"><?php echo $event_info['event_description']; ?></h4>
+                <div class="">
+                    <div style="display: grid; grid-template-columns: 30% auto auto;  margin: auto;">
+                        <div style="margin: auto;">
+                            <h4 style="max-width: fit-content; justify-content: flex-start; " class=" card-title">
+                                <?php echo $event_info['event_description']; ?></h4>
                             <p class="card-text"><?php echo $event_info['address']; ?></p>
-                            <p class="card-text"><?php echo $event_info['club_name']; ?></p>
+                            <p class="card-text"><?php echo getClubByID($event_info['club_id'])[1]; ?></p>
+                            <p class="card-text">Category: <?php echo getClubByID($event_info['club_id'])[2]; ?></p>
                         </div>
 
-                        <div class="col-md-4 text-right">
-                            <p class="card-text"><?php echo $event_info['event_time']; ?></p>
-                            <p class="card-text"><span
+                        <div style="max-width: fit-content; margin: auto; text-align: left ">
+                            <p class="card-text"><?php echo $event_info['date']; ?></p>
+                        </div>
+
+                        <div style="max-width: fit-content;  text-align: right; padding: auto; margin: auto;">
+
+                            <p style="max-width: fit-content; margin-left: auto; margin-right: auto;" class="card-text">
+                                <span
                                     class="spots-remaining"><?php echo getEventCurrentCapacity($event_info['event_id']); ?></span>/<?php echo ($event_info['capacity']); ?>
-                                Spots Filled</p>
+                                Spots Filled
+                            </p>
 
                             <?php if (in_array($event_info['event_id'], $list_of_user_event_ids)): ?>
-                            <form action="events.php" method="post">
+                            <form style="max-width: fit-content; margin-left: auto; margin-right: auto;"
+                                action="events.php" method="post">
                                 <button type="submit" name="leave-button" value="Leave"
                                     class="btn btn-danger d-block mb-2">Leave Event</button>
                                 <input type="hidden" name="event_id" value="<?php echo $event_info['event_id']; ?>" />
                             </form>
                             <?php else: ?>
-                            <form action="events.php" method="post">
+                            <form style="max-width: fit-content; margin-left: auto; margin-right: auto;"
+                                action="events.php" method="post">
                                 <button type="submit" name="join-button" value="Join"
                                     class="btn btn-success d-block mb-2">Join Event</button>
                                 <input type="hidden" name="event_id" value="<?php echo $event_info['event_id']; ?>" />
                             </form>
                             <?php endif; ?>
-                            <a href="event-details.php?event_id=<?php echo $event_info['event_id'] ?>"
+                            <a style="max-width: fit-content; margin-left: auto; margin-right: auto;"
+                                href="event-details.php?event_id=<?php echo $event_info['event_id'] ?>"
                                 class="btn btn-warning d-block">View Details...</a>
-
                         </div>
-
                     </div>
                 </div>
             </div>

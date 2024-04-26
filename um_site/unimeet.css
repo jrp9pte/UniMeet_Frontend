@@ -78,8 +78,8 @@ footer {
 .navbar-toggler {
   margin-right: 10px;
 }
-
-/* .card {
+/* 
+.card {
   background-color: lightgray;
   padding: 10px;
   margin: 20px;
@@ -156,13 +156,15 @@ footer {
 .text-center {
   text-align: center;
 }
-
+.text-left {
+  text-align: left;
+}
 .text-right {
   text-align: right;
 }
 
 .card {
-  background-color: white;
+  background-color: lightgray;
   border: 1px solid #dee2e6;
   border-radius: 0.25rem;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
@@ -187,11 +189,11 @@ footer {
   margin-bottom: 0.5rem;
 }
 
-.card-body {
+/* .card-body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
+} */
 
 .card-time,
 .details-club {
