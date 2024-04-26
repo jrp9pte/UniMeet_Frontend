@@ -10,20 +10,16 @@ if(isset($_SESSION['username'])) {
     $oldPassword = $_POST['oldPassword'];
     $newPassword = $_POST['newPassword'];
 
-    // Check if the new password is the same as the old one
     if (empty($oldPassword) || empty($newPassword)) {
       $message = "Both old and new passwords must be provided!";
     } else {
-      // Get the current password from the database
       $user_info = getAccount($username);
       $first_name = $user_info['first_name'];
       $last_name = $user_info['last_name'];
       $email = $user_info['email'];
       $currentPassword = $user_info['password'];
 
-      // Verify the old password
       if (password_verify($oldPassword, $currentPassword)) {
-        // Check if either oldPassword or newPassword are empty
         if ($oldPassword === $newPassword) {
           $message = "New password must be different from the old password!";
         }  else { 
