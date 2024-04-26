@@ -100,8 +100,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           Last Name: <input type="text" name="last_name" value="<?php echo $last_name; ?>" readonly> <button type="button" class="btn btn-primary edit-button">Edit</button>
         </div>
         <div class="profile-item">
-          Password: <input type="text" name="password" value="<?php "------" ?>" readonly> <button type="button" class="btn btn-primary edit-button">Edit</button>
+          Password: <input type="password" name="password" id="password" value="------" readonly> 
+          <button type="button" class="btn btn-primary" id="change-password" onclick="window.location.href='change_password.php'">Change Password</button>
         </div>
+
+
+
+
+<script>
+document.getElementById('change-password').addEventListener('click', function() {
+  document.getElementById('passwordChangeForm').style.display = 'block';
+});
+</script>
+
         <div class="profile-item">
           Email: <input type="text" name="email" value="<?php echo $email; ?>" readonly> 
         </div>
@@ -120,16 +131,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     editButtons[i].addEventListener('click', function() {
       var input = this.previousElementSibling;
       if (this.textContent === 'Edit') {
-        // Store the current value to revert back if needed
         input.dataset.oldValue = input.value;
         input.readOnly = false;
         input.focus();
-        this.textContent = 'Cancel'; // Change the button text
+        this.textContent = 'Cancel'; 
       } else {
-        // Revert the value and make the input field read-only
         input.value = input.dataset.oldValue;
         input.readOnly = true;
-        this.textContent = 'Edit'; // Change the button text back to 'Edit'
+        this.textContent = 'Edit'; 
       }
     });
   }
