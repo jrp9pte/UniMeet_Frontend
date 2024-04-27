@@ -12,24 +12,43 @@ if(isset($_SESSION['username'])) {
   header("Location: ../login_page/login.php");
   exit();
 }
+
 if(isset($_GET['event_id'])) {
     $event_id = $_GET['event_id'];
-    $club = getClubByID($club_id);
-    $club_events = getEventsByClub($club_id);
     $event_members = getMembersByClub($club_id);
     $event_details = getEventDetails($event_id);
-    $reservations = getReservationsForEvent($event_id);
-    echo '<pre>';
-    print_r($event_details);
-    echo '</pre>';
-    $privilege = 'user';
-    foreach ($club_members as $item){
-      if($item['email'] === $username){
-        $privilege = $item['privilege'];
-        break;
-      }
-    }
+    //$reservations = getReservationsForEvent($event_id);
+    // echo '<pre>';
+    // print_r($reservations);
+    // echo '</pre>';
     //var_dump($club_members);
+
+    $reservations = getReservationAndStatus($event_id);
+    echo '<pre>';
+    print_r($reservations);
+    echo '</pre>';
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $email = $_POST['email'];
+    
+        if (isset($_POST['promote-button'])) {
+            if (promoteEventAdmin($email, $event_id)) {
+                header("Location: ../events_page/event-details.php?event_id={$event_id}&success=promoteSuccessful");
+            } else {
+                header("Location: ../events_page/event-details.php?event_id={$event_id}&error=promoteUnsuccessful");
+            }
+        } elseif (isset($_POST['demote-button'])) {
+            if (deleteEventAdmin($email, $event_id)) {
+                header("Location: ../events_page/event-details.php?event_id={$event_id}&success=demoteSuccessful");
+            } else {
+                header("Location: ../events_page/event-details.php?event_id={$event_id}&error=demoteUnsuccessful");
+            }
+        }
+    
+        header("Location: ../events_page/event-details.php?event_id={$event_id}&error=errorChangingStatus");
+        exit();
+    }
+
 } else {
     echo "Event ID not provided.";
 }
@@ -103,39 +122,37 @@ if(isset($_GET['event_id'])) {
         </div>
         <div class="col">
             <div class="d-flex justify-content-center align-items-center">
-                <h3 class="mr-3">Members</h3>
+                <h3 class="mr-3">Event Administrators</h3>
             </div>
-            <?php foreach ($members as $member_info): ?>
-            <div class="card">
-                <div class="card-body d-flex justify-content-between">
-                    <div>
-                        <h4 class="card-title event-name"><?php echo $member_info['email']?></h4>
+            <?php 
+            foreach ($reservations as $reservation):
+                ?>
+                    <div class="card">
+                        <div class="card-body d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title"><?php echo htmlspecialchars($reservation['email']); ?></h4>
+                            </div>
+                            <div>
+                                <?php if ($reservation['admin_status']): ?>
+                                    <h3 class="card-time card-title text-right">ADMIN</h3>
+                                        <form action="event-details.php?event_id=<?php echo $event_id; ?>" method="post">
+                                            <input type="hidden" name="email" value="<?php echo htmlspecialchars($reservation['email']); ?>">
+                                            <button type="submit" name="demote-button" value="<?php echo htmlspecialchars($reservation['email']); ?>"
+                                                    class="btn btn-warning d-block mb-2">Demote from Admin</button>
+                                        </form>
+                                <?php else: ?>
+                                        <form action="event-details.php?event_id=<?php echo $event_id; ?>" method="post">
+                                            <input type="hidden" name="email" value="<?php echo htmlspecialchars($reservation['email']); ?>">
+                                            <button type="submit" name="promote-button" value="<?php echo htmlspecialchars($reservation['email']); ?>"
+                                                    class="btn btn-primary d-block mb-2">Promote to Admin</button>
+                                        </form>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="card-time card-title text-right"><?php echo strtoupper($member_info['privilege'])?>
-                        </h3>
-                        <?php if ($privilege === 'admin'): ?>
-                        <form action="club-details.php?club_id=<?php echo $club_id ?>" method="post">
-                            <?php if ($member_info['privilege'] === 'admin'): ?>
-                            <button type="submit" name="demote-button" value="Role Change"
-                                class="btn btn-warning d-block mb-2">Demote Member</button>
-                            <?php elseif ($member_info['privilege'] === 'user'): ?>
-                            <button type="submit" name="promote-button" value="Role Change"
-                                class="btn btn-warning d-block mb-2">Promote Member</button>
-                            <?php endif; ?>
-                            <input type="hidden" name="email" value="<?php echo $member_info['email']; ?>" />
-                        </form>
-                        <form action="club-details.php?club_id=<?php echo $club_id ?>" method="post">
-                            <button type="submit" name="remove-button" value="Remove"
-                                class="btn btn-danger d-block mb-2">Remove Member</button>
-                            <input type="hidden" name="email" value="<?php echo $member_info['email']; ?>" />
-                        </form>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
         </div>
+
     </div>
 
 

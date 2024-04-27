@@ -586,6 +586,19 @@ function getReservations($user_email){
     return $result;
 }
 
+function getReservationAndStatus($event_id) {
+    global $db;
+
+    $query = "SELECT r.email, a.event_id IS NOT NULL AS admin_status FROM reservations r LEFT JOIN admin_of a ON r.email = a.email AND r.event_id = a.event_id WHERE r.event_id = :event_id";
+
+    $statement = $db->prepare($query);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->execute();
+    $result = $statement->fetchAll();
+    $statement->closeCursor();
+    return $result;
+}
+
 // 25 IsMyEvent(event_id, user_email):
 // After executing query below, check if query returns value > 0, return true, else, false
 // SELECT COUNT(*) FROM admin_of WHERE event_ID = event_id AND email = user_email;
@@ -604,7 +617,7 @@ function isMyEvent($event_id, $user_email){
 
 // 26 DeleteAdminFromEvent(admin_email, event_id):
 // DELETE FROM admin_of WHERE event_id = event_id AND email = admin_email;
-function deleteAdminFromEvent($admin_email, $event_id){
+function deleteEventAdmin($admin_email, $event_id){
     global $db;
     $query = "DELETE FROM admin_of WHERE event_id = :event_id AND email = :admin_email";
     $statement = $db->prepare($query);
@@ -612,7 +625,17 @@ function deleteAdminFromEvent($admin_email, $event_id){
     $statement->bindValue(':admin_email', $admin_email);
     $statement->execute();
     $statement->closeCursor();
-    // check if admin is deleted or no error
+}
+
+
+function promoteEventAdmin($user_email, $event_id){
+    global $db;
+    $query = "INSERT INTO admin_of(event_id, email) values (:event_id, :user_email)";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->bindValue(':user_email', $user_email);
+    $statement->execute();
+    $statement->closeCursor();
 }
 
 // 27 DeleteEvent(event_id):
