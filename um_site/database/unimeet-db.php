@@ -614,6 +614,19 @@ function getReservations($user_email){
     return $result;
 }
 
+function getReservationAndStatus($event_id) {
+    global $db;
+
+    $query = "SELECT r.email, a.event_id IS NOT NULL AS admin_status FROM reservations r LEFT JOIN admin_of a ON r.email = a.email AND r.event_id = a.event_id WHERE r.event_id = :event_id";
+
+    $statement = $db->prepare($query);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->execute();
+    $result = $statement->fetchAll();
+    $statement->closeCursor();
+    return $result;
+}
+
 // 25 IsMyEvent(event_id, user_email):
 // After executing query below, check if query returns value > 0, return true, else, false
 // SELECT COUNT(*) FROM admin_of WHERE event_ID = event_id AND email = user_email;
@@ -632,7 +645,7 @@ function isMyEvent($event_id, $user_email){
 
 // 26 DeleteAdminFromEvent(admin_email, event_id):
 // DELETE FROM admin_of WHERE event_id = event_id AND email = admin_email;
-function deleteAdminFromEvent($admin_email, $event_id){
+function deleteEventAdmin($admin_email, $event_id){
     global $db;
     $query = "DELETE FROM admin_of WHERE event_id = :event_id AND email = :admin_email";
     $statement = $db->prepare($query);
@@ -640,7 +653,17 @@ function deleteAdminFromEvent($admin_email, $event_id){
     $statement->bindValue(':admin_email', $admin_email);
     $statement->execute();
     $statement->closeCursor();
-    // check if admin is deleted or no error
+}
+
+
+function promoteEventAdmin($user_email, $event_id){
+    global $db;
+    $query = "INSERT INTO admin_of(event_id, email) values (:event_id, :user_email)";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->bindValue(':user_email', $user_email);
+    $statement->execute();
+    $statement->closeCursor();
 }
 
 // 27 DeleteEvent(event_id):
@@ -847,4 +870,49 @@ $statement->execute();
 $result = $statement->fetch();
 $statement->closeCursor();
 return $result[0];
+}
+
+function getReservationsForEvent($event_id) {
+    global $db;
+    $query = "SELECT a.first_name, a.last_name, a.email FROM reservations r NATURAL JOIN accounts a WHERE r.event_id = :event_id";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->execute();
+    $result = $statement->fetchAll();
+    $statement->closeCursor();
+    return $result;
+}
+
+function getEventDetails($event_id) {
+    global $db;
+    $query = "SELECT e.event_id, e.event_description, e.date, c.club_description, l.address, l.capacity, c.club_id, cc.category_name FROM events e NATURAL JOIN locations l NATURAL JOIN club_of NATURAL JOIN clubs c NATURAL JOIN club_categories cc WHERE e.event_id = :event_id";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':event_id', $event_id);
+    $statement->execute();
+    $result = $statement->fetch();
+    $statement->closeCursor();
+    return $result;
+}
+
+function updateEventDetails ($event_id, $event_description, $date, $address, $capacity) {
+    global $db;
+    
+    $db->beginTransaction();
+
+    $lIDQuery = "SELECT location_id FROM events WHERE event_id = ?";
+    
+    $lIDStatement = $db->prepare($lIDQuery);
+    $lIDStatement ->execute([$event_id]);
+    $location_id = $lIDStatement -> fetchColumn();
+    $lQuery = "UPDATE locations SET address = ?, capacity = ? WHERE location_id = ?";
+    $lStatement = $db->prepare($lQuery);
+    $lStatement ->execute([$address, $capacity, $location_id]);
+
+    $eQuery = "UPDATE events SET event_description = ?, date = ? WHERE event_id = ?";
+    $eStatement = $db->prepare($eQuery);
+    $eStatement->execute([$event_description, $date, $event_id]);
+
+    $db->commit();
+
+    return true;
 }

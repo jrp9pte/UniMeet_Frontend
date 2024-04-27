@@ -12,50 +12,45 @@ if(isset($_SESSION['username'])) {
   header("Location: ../login_page/login.php");
   exit();
 }
+
 if(isset($_GET['event_id'])) {
-    $club_id = $_GET['event_id'];
-    $club = getClubByID($club_id);
-    $club_events = getEventsByClub($club_id);
+    $event_id = $_GET['event_id'];
     $event_members = getMembersByClub($club_id);
-    $privilege = 'user';
-    foreach ($club_members as $item){
-      if($item['email'] === $username){
-        $privilege = $item['privilege'];
-        break;
-      }
-    }
+    $event_details = getEventDetails($event_id);
+    //$reservations = getReservationsForEvent($event_id);
+    // echo '<pre>';
+    // print_r($reservations);
+    // echo '</pre>';
     //var_dump($club_members);
+
+    $reservations = getReservationAndStatus($event_id);
+    echo '<pre>';
+    print_r($reservations);
+    echo '</pre>';
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $email = $_POST['email'];
+    
+        if (isset($_POST['promote-button'])) {
+            if (promoteEventAdmin($email, $event_id)) {
+                header("Location: ../events_page/event-details.php?event_id={$event_id}&success=promoteSuccessful");
+            } else {
+                header("Location: ../events_page/event-details.php?event_id={$event_id}&error=promoteUnsuccessful");
+            }
+        } elseif (isset($_POST['demote-button'])) {
+            if (deleteEventAdmin($email, $event_id)) {
+                header("Location: ../events_page/event-details.php?event_id={$event_id}&success=demoteSuccessful");
+            } else {
+                header("Location: ../events_page/event-details.php?event_id={$event_id}&error=demoteUnsuccessful");
+            }
+        }
+    
+        header("Location: ../events_page/event-details.php?event_id={$event_id}&error=errorChangingStatus");
+        exit();
+    }
+
 } else {
     echo "Event ID not provided.";
-}
-if($_SERVER['REQUEST_METHOD'] == 'POST') {
-  if(!empty($_POST['remove-button'])){
-    if($_POST['email'] === $username){
-      echo '<script>alert("Error: Unable to delete yourself as a member.")</script>'; 
-    }
-    else{
-      deleteMember($club_id, $_POST['email']);
-      $club_members = getMembersByClub($club_id);
-    }
-  }
-  else if(!empty($_POST['demote-button'])){
-    if($_POST['email'] === $username){
-      echo '<script>alert("Error: Unable to edit your own role as a member.")</script>'; 
-    }
-    else{
-      updateMember($club_id, $_POST['email'], 'user');
-      $club_members = getMembersByClub($club_id);
-    }
-  }
-  else if(!empty($_POST['promote-button'])){
-    if($_POST['email'] === $username){
-      echo '<script>alert("Error: Unable to edit your own role as a member.")</script>'; 
-    }
-    else{
-      updateMember($club_id, $_POST['email'], 'admin');
-      $club_members = getMembersByClub($club_id);
-    }
-  }
 }
 ?>
 
@@ -84,76 +79,80 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <?php include('../navbar.html') ?>
     <div class="mt-4">
-        <h3 class="row justify-content-center"><?php echo $club['club_description']?></h3>
-        <h4 class="row justify-content-center details-club"><?php echo $club['category_name']?></h4>
+      <h3 class="text-center"><?php echo $event_details['event_description']; ?></h3>
+      <div class="row justify-content-center align-items-center">
+        <div class="col-auto text-center">
+            <h4 class="d-inline"><?php echo $event_details['club_description']; ?></h4>
+        </div>
+        <div class="col-auto">
+            <a href="../club_page/club-details.php?club_id=<?php $event_details['club_id']; ?>">
+                <i class="mdi mdi-information-outline" style="font-size: 24px;"></i>
+            </a>
+        </div>
+      </div>
     </div>
+</div>
     <div class="row justify-content-center mt-4">
         <div class="col">
-            <div class="d-flex justify-content-center align-items-center">
-                <h3 class="mr-3">Events</h3>
-                <a class="nav-item nav-link active" href="../events_page/create-event.php">
-                    <div class="icon-wrapper">
-                        <i class="mdi mdi-plus add-icon"></i>
-                    </div>
-                </a>
-            </div>
-            <?php foreach ($club_events as $event_info): ?>
-            <div class="card">
-                <div class="row">
-                    <div class="col">
-                        <h4 class="card-title event-name"><?php echo $event_info['event_description']?></h4>
-                        <h6 class="card-subtitle mb-2"><?php echo $event_info['address']?></h6>
-                        <h6 class="card-subtitle mb-2"><?php echo $event_info['club_description']?></h6>
-                        <h6 class="card-subtitle mb-2"><?php echo $event_info['category_name']?></h6>
-                    </div>
-                    <div class="col text-end card-right-col">
-                        <h3 class="card-time card-title text-right">
-                            <?php echo date("d-m-Y", strtotime($event_info['date']))?></h3>
-                    </div>
-                </div>
-            </div>
-            <?php endforeach; ?>
+          <div class="d-flex justify-content-center align-items-center">
+              <h3 class="mr-3">Event Details</h3>
+          </div>
+          <div class="card mb-3">
+              <form action="edit-event.php" method="post">
+                  <div class="row">
+                      <div class="col-md-8">
+                          <input type="text" class="form-control mb-2" name="event_description" value="<?php echo$event_details['event_description']; ?>">
+                          <input type="text" class="form-control mb-2" name="address" value="<?php echo $event_details['address']; ?>">
+                          <input type="date" class="form-control mb-2" name="date" value="<?php echo $event_details['date']; ?>">
+                          <input type="number" class="form-control mb-2" name="capacity" value="<?php echo $event_details['capacity']; ?>">
+                          <div class="mb-2">
+                            <label class="form-label">Club Description: <?php echo $event_details['club_description']; ?></label>
+                          </div>
+                          <div class="mb-2">
+                            <label class="form-label">Category Name: <?php echo $event_details['category_name']; ?></label>
+                          </div>
+                      </div>
+                      <div class="col-md-4 text-end">
+                          <button type="submit" name="update-event-button" class="btn btn-primary mb-2">Update Event</button>
+                      </div>
+                      <input type="hidden" name="event_id" value="<?php echo $event_details['event_id']; ?>">
+                  </div>
+              </form>
+          </div>
         </div>
         <div class="col">
             <div class="d-flex justify-content-center align-items-center">
-                <h3 class="mr-3">Members</h3>
-                <!-- <a class="nav-item nav-link active" href="create-member.php?club_id=<?php echo $club_id; ?>">
-                    <div class="icon-wrapper">
-                        <i class="mdi mdi-plus add-icon"></i>
-                    </div>
-                </a> -->
+                <h3 class="mr-3">Event Reservations</h3>
             </div>
-            <?php foreach ($members as $member_info): ?>
-            <div class="card">
-                <div class="card-body d-flex justify-content-between">
-                    <div>
-                        <h4 class="card-title event-name"><?php echo $member_info['email']?></h4>
+            <?php 
+            foreach ($reservations as $reservation):
+                ?>
+                    <div class="card">
+                        <div class="card-body d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title"><?php echo htmlspecialchars($reservation['email']); ?></h4>
+                            </div>
+                            <div>
+                                <?php if ($reservation['admin_status']): ?>
+                                    <h3 class="card-time card-title text-right">ADMIN</h3>
+                                        <form action="event-details.php?event_id=<?php echo $event_id; ?>" method="post">
+                                            <input type="hidden" name="email" value="<?php echo htmlspecialchars($reservation['email']); ?>">
+                                            <button type="submit" name="demote-button" value="<?php echo htmlspecialchars($reservation['email']); ?>"
+                                                    class="btn btn-warning d-block mb-2">Demote from Admin</button>
+                                        </form>
+                                <?php else: ?>
+                                        <form action="event-details.php?event_id=<?php echo $event_id; ?>" method="post">
+                                            <input type="hidden" name="email" value="<?php echo htmlspecialchars($reservation['email']); ?>">
+                                            <button type="submit" name="promote-button" value="<?php echo htmlspecialchars($reservation['email']); ?>"
+                                                    class="btn btn-primary d-block mb-2">Promote to Admin</button>
+                                        </form>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="card-time card-title text-right"><?php echo strtoupper($member_info['privilege'])?>
-                        </h3>
-                        <?php if ($privilege === 'admin'): ?>
-                        <form action="club-details.php?club_id=<?php echo $club_id ?>" method="post">
-                            <?php if ($member_info['privilege'] === 'admin'): ?>
-                            <button type="submit" name="demote-button" value="Role Change"
-                                class="btn btn-warning d-block mb-2">Demote Member</button>
-                            <?php elseif ($member_info['privilege'] === 'user'): ?>
-                            <button type="submit" name="promote-button" value="Role Change"
-                                class="btn btn-warning d-block mb-2">Promote Member</button>
-                            <?php endif; ?>
-                            <input type="hidden" name="email" value="<?php echo $member_info['email']; ?>" />
-                        </form>
-                        <form action="club-details.php?club_id=<?php echo $club_id ?>" method="post">
-                            <button type="submit" name="remove-button" value="Remove"
-                                class="btn btn-danger d-block mb-2">Remove Member</button>
-                            <input type="hidden" name="email" value="<?php echo $member_info['email']; ?>" />
-                        </form>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
         </div>
+
     </div>
 
 
@@ -170,4 +169,4 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 </body>
 
-</html>
+</html> 
