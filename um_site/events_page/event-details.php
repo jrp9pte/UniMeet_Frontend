@@ -122,7 +122,7 @@ if(isset($_GET['event_id'])) {
         </div>
         <div class="col">
             <div class="d-flex justify-content-center align-items-center">
-                <h3 class="mr-3">Event Administrators</h3>
+                <h3 class="mr-3">Event Reservations</h3>
             </div>
             <?php 
             foreach ($reservations as $reservation):
