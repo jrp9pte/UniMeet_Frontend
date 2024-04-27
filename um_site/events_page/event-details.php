@@ -24,9 +24,9 @@ if(isset($_GET['event_id'])) {
     //var_dump($club_members);
 
     $reservations = getReservationAndStatus($event_id);
-    echo '<pre>';
-    print_r($reservations);
-    echo '</pre>';
+    // echo '<pre>';
+    // print_r($reservations);
+    // echo '</pre>';
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $email = $_POST['email'];
