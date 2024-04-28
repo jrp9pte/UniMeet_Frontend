@@ -27,7 +27,15 @@ if(isset($_GET['event_id'])) {
     // echo '<pre>';
     // print_r($reservations);
     // echo '</pre>';
-
+    //var_dump($reservations);
+    $count = 0;
+    foreach($reservations as $item){
+        //var_dump($item['admin_status']);
+        if($item['admin_status'] === 1){
+            $count = $count + 1;
+        }
+    }
+    //var_dump($count);
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $email = $_POST['email'];
     
@@ -38,14 +46,22 @@ if(isset($_GET['event_id'])) {
                 header("Location: ../events_page/event-details.php?event_id={$event_id}&error=promoteUnsuccessful");
             }
         } elseif (isset($_POST['demote-button'])) {
-            if (deleteEventAdmin($email, $event_id)) {
+            if($count < 2){
+                echo '<script>alert("Error: Can not demote this member as they are the last remaining admin.")</script>'; 
+                echo '<script>window.location.href = "./event-details.php?event_id=' . $event_id . '";</script>';
+            }
+            else if($email === $username){
+                echo '<script>alert("Error: Can not demote yourself as an admin.")</script>'; 
+                echo '<script>window.location.href = "./event-details.php?event_id=' . $event_id . '";</script>';
+            }
+            else if (deleteEventAdmin($email, $event_id)) {
                 header("Location: ../events_page/event-details.php?event_id={$event_id}&success=demoteSuccessful");
             } else {
                 header("Location: ../events_page/event-details.php?event_id={$event_id}&error=demoteUnsuccessful");
             }
         }
     
-        header("Location: ../events_page/event-details.php?event_id={$event_id}&error=errorChangingStatus");
+        //header("Location: ../events_page/event-details.php?event_id={$event_id}&error=errorChangingStatus");
         exit();
     }
 
