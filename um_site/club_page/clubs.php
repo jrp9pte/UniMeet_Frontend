@@ -21,8 +21,20 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $list_of_clubs = getClubsByFilter($_POST['search-filter']);
   }
   else if(!empty($_POST['leave-button'])){
-    deleteMember($_POST['club_id'], $username);
-    $list_of_user_club_ids = getClubIDsByAccount($username);
+    $members = getMembersByClub($_POST['club_id']);
+    $emails = array();
+    foreach($members as $item){
+        if($item['privilege'] === 'admin'){
+            $emails[] = $item['email'];
+        }
+    }
+    if(count($emails) === 1){
+        echo '<script>alert("Error: Can not leave the club as you are the last remaining admin.")</script>'; 
+    }
+    else{
+        deleteMember($_POST['club_id'], $username);
+        $list_of_user_club_ids = getClubIDsByAccount($username);
+    }
   }
   else if(!empty($_POST['join-button'])){
     $result = createMember($_POST['club_id'], $username, 'user');

@@ -352,21 +352,20 @@ function createEvent($location, $event_date, $event_description, $event_category
         echo "Database error: " . $e->getMessage();
         // var_dump("In createEvent3 Error");
         throw new Exception("Database error: ");
-        return false;   
+        return false;
+        
     }
-}
 
+}
 
 function createLocation($capacity, $location_address){
 //    INSERT INTO locations(capacity, address) VALUES (capacity, address);
     global $db;
-
     try {
     $query = "INSERT INTO locations (capacity, address) VALUES (:capacity, :location_address)";
-
     $statement = $db->prepare($query);
     $statement->bindValue(':capacity', $capacity);
-    $statement->bindValue(':address', $location_address);
+    $statement->bindValue(':location_address', $location_address);
     $result = $statement->execute();
     $lastInsertedId = $db->lastInsertId();
     $statement->closeCursor();
@@ -946,4 +945,35 @@ function updateEventDetails ($event_id, $event_description, $date, $address, $ca
     $db->commit();
 
     return true;
+}
+
+function deleteEvent($event_id,  $user_email){
+    if (!isMyEvent($event_id, $user_email)) {
+        return false;
+    }
+    global $db;
+    try {
+        // var_dump("In createEvent1");
+        $query = "CALL deleteEvent(:event_id, :user_email)";
+        $statement = $db->prepare($query);
+        // var_dump("In createEvent2");
+        $statement->bindValue(':event_id', $event_id);
+        $statement->bindValue(':user_email', $user_email);
+        // var_dump("In createEvent2.5");
+        $result = $statement->execute();
+        if (!$result) {
+            $errorInfo = $statement->errorInfo();
+            echo "Error Info: ";
+            print_r($errorInfo);
+        }
+        // var_dump("In createEvent3");
+        $lastInsertedId = $db->lastInsertId();
+        $statement->closeCursor();
+        return $lastInsertedId;
+    } catch (PDOException $e) {
+        echo "Database error: " . $e->getMessage();
+        // var_dump("In createEvent3 Error");
+        throw new Exception("Database error: ");
+        return false;   
+    }
 }
