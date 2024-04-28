@@ -41,7 +41,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $list_of_user_event_ids = getEventsByAccount($username);
     // var_dump("list_of_user_event_ids", $result);
     header("Location: ./events.php");
-    
   }
 }
 ?>
