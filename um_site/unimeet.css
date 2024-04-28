@@ -85,6 +85,11 @@ footer {
   margin: 20px;
 } */
 
+.event-card-container {
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
 .event-name {
   font-weight: bold;
 }
