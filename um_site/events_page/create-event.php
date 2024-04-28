@@ -13,7 +13,8 @@ if(isset($_SESSION['username'])) {
   $list_of_clubs = getClubs();
   // sort list of locations by 'address' alphabetically
   usort($list_of_locations, function($a, $b) {
-    return $a['address'] <=> $b['address'];
+    return getLocation($a)[2] <=> getLocation($b)[2];
+    // return $a['address'] <=> $b['address'];
   });
   // console log the list of events
   // $json = json_encode($list_of_locations, JSON_PRETTY_PRINT);
