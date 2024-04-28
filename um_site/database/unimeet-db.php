@@ -955,22 +955,23 @@ function deleteEvent($event_id,  $user_email){
     global $db;
     try {
         // var_dump("In createEvent1");
-        $query = "CALL deleteEvent(:event_id, :user_email)";
+        $query = "DELETE FROM events WHERE event_id = :event_id";
         $statement = $db->prepare($query);
         // var_dump("In createEvent2");
         $statement->bindValue(':event_id', $event_id);
-        $statement->bindValue(':user_email', $user_email);
+        // $statement->bindValue(':user_email', $user_email);
         // var_dump("In createEvent2.5");
         $result = $statement->execute();
-        if (!$result) {
-            $errorInfo = $statement->errorInfo();
-            echo "Error Info: ";
-            print_r($errorInfo);
-        }
+        // if (!$result) {
+        //     $errorInfo = $statement->errorInfo();
+        //     echo "Error Info: ";
+        //     print_r($errorInfo);
+        // }
         // var_dump("In createEvent3");
-        $lastInsertedId = $db->lastInsertId();
+        // $lastInsertedId = $db->lastInsertId();
         $statement->closeCursor();
-        return $lastInsertedId;
+        // return $lastInsertedId;
+        return true;
     } catch (PDOException $e) {
         echo "Database error: " . $e->getMessage();
         // var_dump("In createEvent3 Error");
