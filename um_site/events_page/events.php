@@ -13,6 +13,9 @@ if(isset($_SESSION['username'])) {
   // var_dump($list_of_events);
   $list_of_user_event_ids = getEventsByAccount($username);
   $list_of_my_events = getAllEventsUserIsAdminOf($username);
+  usort($list_of_events, function($a, $b) {
+    return $a['event_description'] <=> $b['event_description'];
+  });
   //var_dump($list_of_my_events);
 //   var_dump($list_of_user_event_ids);
 //   $json = json_encode($list_of_user_event_ids, JSON_PRETTY_PRINT);

@@ -13,7 +13,7 @@ if(isset($_SESSION['username'])) {
   $list_of_clubs = getClubs();
   // sort list of locations by 'address' alphabetically
   usort($list_of_locations, function($a, $b) {
-    return $a['address'] <=> $b['address'];
+    return getLocation($a)[2] <=> getLocation($b)[2];
   });
   // console log the list of events
 //   $json = json_encode($list_of_clubs, JSON_PRETTY_PRINT);
@@ -64,8 +64,8 @@ if(isset($_SESSION['username'])) {
                         aria-describedby="eventHelp" placeholder="Enter event name...">
                 </div>
                 <div class="form-group mb-3">
-                    <label for="date">Enter a date:</label>
-                    <input type="date" class="mt-2 form-control" id="event-date" name="event-date" required>
+                    <label for="date">Enter a date and time:</label>
+                    <input type="datetime-local" class="mt-2 form-control" id="event-date" name="event-date" required>
                 </div>
                 <div class="form-group mb-3">
                     <label>Select Event Category:</label>
