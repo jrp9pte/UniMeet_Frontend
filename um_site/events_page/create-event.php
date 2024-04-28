@@ -16,11 +16,10 @@ if(isset($_SESSION['username'])) {
     return $a['address'] <=> $b['address'];
   });
   // console log the list of events
-  // $json = json_encode($list_of_locations, JSON_PRETTY_PRINT);
-  //           echo "<script>
-  //           console.log( $json);
-  //           </script>";
-  //var_dump($list_of_categories);
+//   $json = json_encode($list_of_clubs, JSON_PRETTY_PRINT);
+//             echo "<script>
+//             console.log( $json);
+//             </script>";
 } else {
   // Redirect to login page or handle unauthorized access
   header("Location: ../login_page/login.php");
@@ -80,7 +79,7 @@ if(isset($_SESSION['username'])) {
                     <label>Select location:</label>
                     <select class="mt-2 form-control" id="event-location" name="event-location">
                         <?php foreach ($list_of_locations as $location_info): ?>
-                        <option value="<?php echo getLocation($location_info)[2]; ?>">
+                        <option value="<?php echo $location_info ?>">
                             <?php echo getLocation($location_info)[2]; ?></option>
                         <?php endforeach; ?>
                     </select>
@@ -89,7 +88,7 @@ if(isset($_SESSION['username'])) {
                     <label>Select Club:</label>
                     <select class="mt-2 form-control" id="event-club" name="event-club">
                         <?php foreach ($list_of_clubs as $club_info): ?>
-                        <option value="<?php echo $club_info['club_description']; ?>">
+                        <option value="<?php echo $club_info[0] ?>">
                             <?php echo $club_info['club_description']; ?></option>
                         <?php endforeach; ?>
                     </select>

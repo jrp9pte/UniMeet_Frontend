@@ -321,7 +321,8 @@ function updatePassword($email, $password) {
 // Stored procedure 
 function createEvent($location, $event_date, $event_description, $event_category, $user_email, $club){
     global $db;
-    $query = "CALL CreateEvent(:location, :event_date, :event_description, :event_category :user_email :club)";
+
+    $query = "CALL CreateEvent(:location, :event_date, :event_description, :event_category, :user_email, :club)";
     $statement = $db->prepare($query);
     $statement->bindValue(':location', $location);
     $statement->bindValue(':event_date', $event_date);
@@ -333,8 +334,8 @@ function createEvent($location, $event_date, $event_description, $event_category
     $lastInsertedId = $db->lastInsertId();
     $statement->closeCursor();
     return $lastInsertedId;
-
 }
+
 
 function createLocation($capacity, $location_address){
 //    INSERT INTO locations(capacity, address) VALUES (capacity, address);
