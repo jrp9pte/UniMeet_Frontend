@@ -114,19 +114,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             </script>"; ?> -->
             <div class="card mb-3">
                 <div class="card-body d-flex justify-content-between">
-                    <div class="col-md-6">
+                    <div class="col-md-10">
                         <h4 class="card-title">
                             <?php echo $event_info['event_description']; ?></h4>
                         <p class="card-text"><?php echo $event_info['address']; ?></p>
                         <p class="card-text"><?php echo getClubByID($event_info['club_id'])[1]; ?></p>
                         <p class="card-text">Category:
                             <?php echo getClubByID($event_info['club_id'])[2]; ?></p>
-                    </div>
-
-                    <div class="col-md-4">
                         <p class="card-text"><?php echo $event_info['date']; ?></p>
                     </div>
-
                     <div class="col-md-2">
 
                         <p class="card-text">
