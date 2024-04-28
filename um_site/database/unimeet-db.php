@@ -322,26 +322,45 @@ function updatePassword($email, $password) {
 function createEvent($location, $event_date, $event_description, $event_category, $user_email, $club){
     
     global $db;
-    $query = "CALL CreateEvent(:location, :event_date, :event_description, :event_category, :user_email, :club)";
-    $statement = $db->prepare($query);
-    $statement->bindValue(':location', $location);
-    $statement->bindValue(':event_date', $event_date);
-    $statement->bindValue(':event_description', $event_description);
-    $statement->bindValue(':event_category', $event_category);
-    $statement->bindValue(':user_email', $user_email);
-    $statement->bindValue(':club', $club);
-    $result = $statement->execute();
-    $lastInsertedId = $db->lastInsertId();
-    $statement->closeCursor();
-    return $lastInsertedId;
-
+    try {
+        // var_dump("In createEvent1");
+        $query = "CALL CreateEvent(:location, :event_date, :event_description, :event_category, :user_email, :club)";
+        $statement = $db->prepare($query);
+        // var_dump("In createEvent2");
+        $statement->bindValue(':location', $location);
+        $statement->bindValue(':event_date', $event_date);
+        $statement->bindValue(':event_description', $event_description);
+        $statement->bindValue(':event_category', $event_category);
+    
+        $statement->bindValue(':user_email', $user_email);
+        $statement->bindValue(':club', $club);
+        // var_dump("In createEvent2.5");
+        $result = $statement->execute();
+        if (!$result) {
+            $errorInfo = $statement->errorInfo();
+            echo "Error Info: ";
+            print_r($errorInfo);
+        }
+        // var_dump("In createEvent3");
+        $lastInsertedId = $db->lastInsertId();
+        $statement->closeCursor();
+        return $lastInsertedId;
+    } catch (PDOException $e) {
+        echo "Database error: " . $e->getMessage();
+        // var_dump("In createEvent3 Error");
+        throw new Exception("Database error: ");
+        return false;   
+    }
 }
 
 
 function createLocation($capacity, $location_address){
 //    INSERT INTO locations(capacity, address) VALUES (capacity, address);
     global $db;
-    $query = "INSERT INTO locations (capacity, address) VALUES (:capacity, :address)";
+
+    try {
+    $query = "INSERT INTO locations (capacity, address) VALUES (:capacity, :location_address)";
+
     $statement = $db->prepare($query);
     $statement->bindValue(':capacity', $capacity);
     $statement->bindValue(':address', $location_address);
@@ -349,6 +368,13 @@ function createLocation($capacity, $location_address){
     $lastInsertedId = $db->lastInsertId();
     $statement->closeCursor();
     return $lastInsertedId;
+    } catch (PDOException $e) {
+        echo "Database error: " . $e->getMessage();
+        // var_dump("In createEvent3 Error");
+        throw new Exception("Database error! ");
+        return false;
+        
+    }
 }
 
 // 4
