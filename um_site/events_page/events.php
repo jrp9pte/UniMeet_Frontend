@@ -136,8 +136,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 Spots Filled
                             </p>
                             <?php if (in_array($event_info['event_id'], $list_of_my_events)): ?>
-                                <button name="leave-button" value="Leave"
-                                    class="btn btn-danger d-block mb-2" disabled>Admin</button>
                             <?php elseif (in_array($event_info['event_id'], $list_of_user_event_ids)):?>
                             <form style="max-width: fit-content; margin-left: auto; margin-right: auto;"
                                 action="events.php" method="post">
