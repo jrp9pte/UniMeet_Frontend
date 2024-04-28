@@ -341,10 +341,10 @@ function createEvent($location, $event_date, $event_description, $event_category
 function createLocation($capacity, $location_address){
 //    INSERT INTO locations(capacity, address) VALUES (capacity, address);
     global $db;
-    $query = "INSERT INTO locations (capacity, location_address) VALUES (:capacity, :location_address)";
+    $query = "INSERT INTO locations (capacity, address) VALUES (:capacity, :address)";
     $statement = $db->prepare($query);
     $statement->bindValue(':capacity', $capacity);
-    $statement->bindValue(':location_address', $location_address);
+    $statement->bindValue(':address', $location_address);
     $result = $statement->execute();
     $lastInsertedId = $db->lastInsertId();
     $statement->closeCursor();
