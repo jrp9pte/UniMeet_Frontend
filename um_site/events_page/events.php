@@ -13,6 +13,7 @@ if(isset($_SESSION['username'])) {
   // var_dump($list_of_events);
   $list_of_user_event_ids = getEventsByAccount($username);
   $list_of_my_events = getAllEventsUserIsAdminOf($username);
+  //var_dump($list_of_my_events);
 //   var_dump($list_of_user_event_ids);
 //   $json = json_encode($list_of_user_event_ids, JSON_PRETTY_PRINT);
 //             echo "<script>
@@ -135,8 +136,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     class="spots-remaining"><?php echo getEventCurrentCapacity($event_info['event_id']); ?></span>/<?php echo ($event_info['capacity']); ?>
                                 Spots Filled
                             </p>
-
-                            <?php if (in_array($event_info['event_id'], $list_of_user_event_ids)): ?>
+                            <?php if (in_array($event_info['event_id'], $list_of_my_events)): ?>
+                                <button name="leave-button" value="Leave"
+                                    class="btn btn-danger d-block mb-2" disabled>Admin</button>
+                            <?php elseif (in_array($event_info['event_id'], $list_of_user_event_ids)):?>
                             <form style="max-width: fit-content; margin-left: auto; margin-right: auto;"
                                 action="events.php" method="post">
                                 <button type="submit" name="leave-button" value="Leave"
