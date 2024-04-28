@@ -947,3 +947,34 @@ function updateEventDetails ($event_id, $event_description, $date, $address, $ca
 
     return true;
 }
+
+function deleteEvent($event_id,  $user_email){
+    if (!isMyEvent($event_id, $user_email)) {
+        return false;
+    }
+    global $db;
+    try {
+        // var_dump("In createEvent1");
+        $query = "CALL deleteEvent(:event_id, :user_email)";
+        $statement = $db->prepare($query);
+        // var_dump("In createEvent2");
+        $statement->bindValue(':event_id', $event_id);
+        $statement->bindValue(':user_email', $user_email);
+        // var_dump("In createEvent2.5");
+        $result = $statement->execute();
+        if (!$result) {
+            $errorInfo = $statement->errorInfo();
+            echo "Error Info: ";
+            print_r($errorInfo);
+        }
+        // var_dump("In createEvent3");
+        $lastInsertedId = $db->lastInsertId();
+        $statement->closeCursor();
+        return $lastInsertedId;
+    } catch (PDOException $e) {
+        echo "Database error: " . $e->getMessage();
+        // var_dump("In createEvent3 Error");
+        throw new Exception("Database error: ");
+        return false;   
+    }
+}
