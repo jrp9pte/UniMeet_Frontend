@@ -37,6 +37,10 @@ if(isset($_GET['event_id'])) {
     }
     //var_dump($count);
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // $json = json_encode($_POST, JSON_PRETTY_PRINT);
+        //     echo "<script>
+        //     console.log( $json);
+        //     </script>";
         $email = $_POST['email'];
     
         if (isset($_POST['promote-button'])) {
@@ -59,13 +63,15 @@ if(isset($_GET['event_id'])) {
             } else {
                 header("Location: ../events_page/event-details.php?event_id={$event_id}&error=demoteUnsuccessful");
             }
-    
+        }elseif (isset($_POST["delete-event-button"])) {
+            var_dump($event_id);
             
-        }
-        elseif (isset($_POST["delete-event-button"])) {
-            if (deleteEvent($event_id, $username)) {
+            if (deleteEvent($event_id, $email)== true) {
                 header("Location: ../events_page/events.php?success=deleteSuccessful");
+                var_dump($event_id);
+                exit();
             } else {
+                var_dump("here");
                 header("Location: ../events_page/event-details.php?event_id={$event_id}&error=deleteUnsuccessful");
             }
         }
@@ -114,10 +120,16 @@ if(isset($_GET['event_id'])) {
                 <i class="mdi mdi-information-outline" style="font-size: 24px;"></i>
             </a>
         </div>
-        <form action="event-details.php" method="post">
-            <button type="button" name="delete-event-button" class="btn btn-primary mb-2">Delete
-                Event</button>
-        </form>
+        <div class="row justify-content-center align-items-center">
+            <form action="event-details.php?event_id=<?php echo $event_id; ?>" method="post" style="margin: auto;">
+                <input type="hidden" name="email" value="<?php echo htmlspecialchars($username); ?>">
+                <div class="text-center">
+                    <button type="submit" name="delete-event-button" class="btn btn-danger mb-2"
+                        value="<?php echo htmlspecialchars($username); ?>">Delete Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
     </div>
     <div class="row justify-content-center mt-4">
         <div class="col">
@@ -132,7 +144,7 @@ if(isset($_GET['event_id'])) {
                                 value="<?php echo$event_details['event_description']; ?>">
                             <input type="text" class="form-control mb-2" name="address"
                                 value="<?php echo $event_details['address']; ?>">
-                            <input type="date" class="form-control mb-2" name="date"
+                            <input type="datetime" class="form-control mb-2" name="date"
                                 value="<?php echo $event_details['date']; ?>">
                             <input type="number" class="form-control mb-2" name="capacity"
                                 value="<?php echo $event_details['capacity']; ?>">
