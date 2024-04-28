@@ -151,15 +151,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <input type="hidden" name="event_id" value="<?php echo $event_info['event_id']; ?>" />
                             </form>
                             <?php endif; ?>
+                            <?php if (in_array($event_info['event_id'], $list_of_my_events)): ?>
                             <a style="max-width: fit-content; margin-left: auto; margin-right: auto;"
                                 href="event-details.php?event_id=<?php echo $event_info['event_id'] ?>"
                                 class="btn btn-warning d-block">View Details...</a>
-                            <!--Uncomment for real version,need this for now to be able to access  -->
-                            <!-- <?php if (in_array($event_info['event_id'], $list_of_my_events)): ?> -->
-                            <a style="max-width: fit-content; margin-left: auto; margin-right: auto;"
-                                href="event-details.php?event_id=<?php echo $event_info['event_id'] ?>"
-                                class="btn btn-warning d-block">View Details...</a>
-                            <!-- <?php endif; ?> -->
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
