@@ -59,6 +59,15 @@ if(isset($_GET['event_id'])) {
             } else {
                 header("Location: ../events_page/event-details.php?event_id={$event_id}&error=demoteUnsuccessful");
             }
+    
+            
+        }
+        elseif (isset($_POST["delete-event-button"])) {
+            if (deleteEvent($event_id, $username)) {
+                header("Location: ../events_page/events.php?success=deleteSuccessful");
+            } else {
+                header("Location: ../events_page/event-details.php?event_id={$event_id}&error=deleteUnsuccessful");
+            }
         }
     
         //header("Location: ../events_page/event-details.php?event_id={$event_id}&error=errorChangingStatus");
@@ -105,36 +114,45 @@ if(isset($_GET['event_id'])) {
                 <i class="mdi mdi-information-outline" style="font-size: 24px;"></i>
             </a>
         </div>
-      </div>
+        <form action="event-details.php" method="post">
+            <button type="button" name="delete-event-button" class="btn btn-primary mb-2">Delete
+                Event</button>
+        </form>
     </div>
-</div>
     <div class="row justify-content-center mt-4">
         <div class="col">
-          <div class="d-flex justify-content-center align-items-center">
-              <h3 class="mr-3">Event Details</h3>
-          </div>
-          <div class="card mb-3">
-              <form action="edit-event.php" method="post">
-                  <div class="row">
-                      <div class="col-md-8">
-                          <input type="text" class="form-control mb-2" name="event_description" value="<?php echo$event_details['event_description']; ?>">
-                          <input type="text" class="form-control mb-2" name="address" value="<?php echo $event_details['address']; ?>">
-                          <input type="date" class="form-control mb-2" name="date" value="<?php echo $event_details['date']; ?>">
-                          <input type="number" class="form-control mb-2" name="capacity" value="<?php echo $event_details['capacity']; ?>">
-                          <div class="mb-2">
-                            <label class="form-label">Club Description: <?php echo $event_details['club_description']; ?></label>
-                          </div>
-                          <div class="mb-2">
-                            <label class="form-label">Category Name: <?php echo $event_details['category_name']; ?></label>
-                          </div>
-                      </div>
-                      <div class="col-md-4 text-end">
-                          <button type="submit" name="update-event-button" class="btn btn-primary mb-2">Update Event</button>
-                      </div>
-                      <input type="hidden" name="event_id" value="<?php echo $event_details['event_id']; ?>">
-                  </div>
-              </form>
-          </div>
+            <div class="d-flex justify-content-center align-items-center">
+                <h3 class="mr-3">Event Details</h3>
+            </div>
+            <div class="card mb-3">
+                <form action="edit-event.php" method="post">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <input type="text" class="form-control mb-2" name="event_description"
+                                value="<?php echo$event_details['event_description']; ?>">
+                            <input type="text" class="form-control mb-2" name="address"
+                                value="<?php echo $event_details['address']; ?>">
+                            <input type="date" class="form-control mb-2" name="date"
+                                value="<?php echo $event_details['date']; ?>">
+                            <input type="number" class="form-control mb-2" name="capacity"
+                                value="<?php echo $event_details['capacity']; ?>">
+                            <div class="mb-2">
+                                <label class="form-label">Club Description:
+                                    <?php echo $event_details['club_description']; ?></label>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Category Name:
+                                    <?php echo $event_details['category_name']; ?></label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button type="submit" name="update-event-button" class="btn btn-primary mb-2">Update
+                                Event</button>
+                        </div>
+                        <input type="hidden" name="event_id" value="<?php echo $event_details['event_id']; ?>">
+                    </div>
+                </form>
+            </div>
         </div>
         <div class="col">
             <div class="d-flex justify-content-center align-items-center">
@@ -143,30 +161,34 @@ if(isset($_GET['event_id'])) {
             <?php 
             foreach ($reservations as $reservation):
                 ?>
-                    <div class="card">
-                        <div class="card-body d-flex justify-content-between">
-                            <div>
-                                <h4 class="card-title"><?php echo htmlspecialchars($reservation['email']); ?></h4>
-                            </div>
-                            <div>
-                                <?php if ($reservation['admin_status']): ?>
-                                    <h3 class="card-time card-title text-right">ADMIN</h3>
-                                        <form action="event-details.php?event_id=<?php echo $event_id; ?>" method="post">
-                                            <input type="hidden" name="email" value="<?php echo htmlspecialchars($reservation['email']); ?>">
-                                            <button type="submit" name="demote-button" value="<?php echo htmlspecialchars($reservation['email']); ?>"
-                                                    class="btn btn-warning d-block mb-2">Demote from Admin</button>
-                                        </form>
-                                <?php else: ?>
-                                        <form action="event-details.php?event_id=<?php echo $event_id; ?>" method="post">
-                                            <input type="hidden" name="email" value="<?php echo htmlspecialchars($reservation['email']); ?>">
-                                            <button type="submit" name="promote-button" value="<?php echo htmlspecialchars($reservation['email']); ?>"
-                                                    class="btn btn-primary d-block mb-2">Promote to Admin</button>
-                                        </form>
-                                <?php endif; ?>
-                            </div>
-                        </div>
+            <div class="card">
+                <div class="card-body d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title"><?php echo htmlspecialchars($reservation['email']); ?></h4>
                     </div>
-                <?php endforeach; ?>
+                    <div>
+                        <?php if ($reservation['admin_status']): ?>
+                        <h3 class="card-time card-title text-right">ADMIN</h3>
+                        <form action="event-details.php?event_id=<?php echo $event_id; ?>" method="post">
+                            <input type="hidden" name="email"
+                                value="<?php echo htmlspecialchars($reservation['email']); ?>">
+                            <button type="submit" name="demote-button"
+                                value="<?php echo htmlspecialchars($reservation['email']); ?>"
+                                class="btn btn-warning d-block mb-2">Demote from Admin</button>
+                        </form>
+                        <?php else: ?>
+                        <form action="event-details.php?event_id=<?php echo $event_id; ?>" method="post">
+                            <input type="hidden" name="email"
+                                value="<?php echo htmlspecialchars($reservation['email']); ?>">
+                            <button type="submit" name="promote-button"
+                                value="<?php echo htmlspecialchars($reservation['email']); ?>"
+                                class="btn btn-primary d-block mb-2">Promote to Admin</button>
+                        </form>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
         </div>
 
     </div>
@@ -185,4 +207,4 @@ if(isset($_GET['event_id'])) {
 
 </body>
 
-</html> 
+</html>
