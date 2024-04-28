@@ -9,9 +9,9 @@ if(isset($_SESSION['username'])) {
   $username = $_SESSION['username'];
   if($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(!empty($_POST['create-club-button'])){
-        $clubID = createClub($_POST['club-name']);
-        createClubCategory($clubID, $_POST['club-category']);
-        createMember($clubID, $username, 'admin');
+        $clubID = createClub($_POST['club-name'], $_POST['club-category'], $username, 'admin');
+        //createClubCategory($clubID, $_POST['club-category']);
+        //createMember($clubID, $username, 'admin');
         header("Location: ./clubs.php");
         exit();
     }

@@ -16,16 +16,19 @@ function createAccount($email, $password, $first_name, $last_name)
 }
 
 // should be procedure
-function createClub($club_description)
+function createClub($club_description, $category_name, $email, $privilege)
 {
     global $db;
-    $query = "INSERT INTO clubs (club_description) VALUES (:club_description)";
+    $query = "CALL CreateClub(:club_description, :category_name, :email, :privilege)";
     $statement = $db->prepare($query);
     $statement->bindValue(':club_description', $club_description);
+    $statement->bindValue(':category_name', $category_name);
+    $statement->bindValue(':email', $email);
+    $statement->bindValue(':privilege', $privilege);
     $result = $statement->execute();
     $lastInsertedId = $db->lastInsertId();
     $statement->closeCursor();
-    return $lastInsertedId;
+    return $result;
 }
 
 function createClubCategory($club_id, $category_name)

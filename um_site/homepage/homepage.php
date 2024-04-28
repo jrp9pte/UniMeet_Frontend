@@ -60,8 +60,8 @@ if(isset($_SESSION['username'])) {
                         <h6 class="card-subtitle mb-2"><?php echo $event_info['category_name']?></h6>
                     </div>
                     <div class="col text-end card-right-col">
-                        <h3 class="card-time card-title text-right">
-                            <?php echo date("d-m-Y", strtotime($event_info['date']))?></h3>
+                        <h3 class="card-time card-title text-right"><?php echo date("d-m-Y", strtotime($event_info['date'])); ?></h3>
+                        <h3 style="font-weight: bold" class=" card-title card-time"><?php echo date("h:i A", strtotime($event_info['date'])); ?></h3>
                     </div>
                 </div>
             </div>
