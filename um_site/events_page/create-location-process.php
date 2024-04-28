@@ -10,7 +10,7 @@ if(isset($_SESSION['username'])) {
   if($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(!empty($_POST['create-location-button'])){
         $locationID = createLocation($_POST['capacity'], $_POST['location'] );
-        header("Location: ./create-events.php");
+        header("Location: ./create-event.php");
         exit();
     }
   }
