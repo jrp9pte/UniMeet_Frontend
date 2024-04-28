@@ -293,7 +293,7 @@ function updateMember($club_id, $email, $privilege){
 
 function updateAccount($email, $first_name, $last_name) {
     global $db;
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    // $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     $query = "UPDATE accounts SET first_name = :first_name, last_name = :last_name WHERE email = :email";
     $statement = $db->prepare($query);
     $statement->bindValue(':email', $email);
@@ -320,9 +320,9 @@ function updatePassword($email, $password) {
 
 // Stored procedure 
 function createEvent($location, $event_date, $event_description, $event_category, $user_email, $club){
+    
     global $db;
-
-    $query = "CALL CreateEvent(:location, :event_date, :event_description, :event_category, :user_email, :club)";
+    $query = "CALL CreateEvent(:location, :event_date, :event_description, :event_category :user_email :club)";
     $statement = $db->prepare($query);
     $statement->bindValue(':location', $location);
     $statement->bindValue(':event_date', $event_date);
@@ -334,6 +334,7 @@ function createEvent($location, $event_date, $event_description, $event_category
     $lastInsertedId = $db->lastInsertId();
     $statement->closeCursor();
     return $lastInsertedId;
+
 }
 
 
