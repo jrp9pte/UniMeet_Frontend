@@ -124,7 +124,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <p class="card-text"><?php echo getClubByID($event_info['club_id'])[1]; ?></p>
                         <p class="card-text">Category:
                             <?php echo getClubByID($event_info['club_id'])[2]; ?></p>
-                        <p class="card-text"><?php echo $event_info['date']; ?></p>
+                        <p class="card-text"><?php echo date("d-m-Y", strtotime($event_info['date'])); ?></p>
+                        <p style="font-weight: bold" class="card-text"><?php echo date("h:i A", strtotime($event_info['date'])); ?></p>
                     </div>
                     <div class="col-md-2">
 
