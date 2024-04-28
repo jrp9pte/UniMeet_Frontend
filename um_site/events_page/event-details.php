@@ -19,7 +19,7 @@ if(isset($_GET['event_id'])) {
     $event_details = getEventDetails($event_id);
     //$reservations = getReservationsForEvent($event_id);
     // echo '<pre>';
-    // print_r($event_details);
+    // print_r($reservations);
     // echo '</pre>';
     //var_dump($club_members);
 
@@ -101,7 +101,7 @@ if(isset($_GET['event_id'])) {
             <h4 class="d-inline"><?php echo $event_details['club_description']; ?></h4>
         </div>
         <div class="col-auto">
-            <a href="../club_page/club-details.php?club_id=<?php echo $event_details[6];?>">
+            <a href="../club_page/club-details.php?club_id=<?php $event_details['club_id']; ?>">
                 <i class="mdi mdi-information-outline" style="font-size: 24px;"></i>
             </a>
         </div>

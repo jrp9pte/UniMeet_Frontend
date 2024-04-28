@@ -352,21 +352,20 @@ function createEvent($location, $event_date, $event_description, $event_category
         echo "Database error: " . $e->getMessage();
         // var_dump("In createEvent3 Error");
         throw new Exception("Database error: ");
-        return false;   
+        return false;
+        
     }
-}
 
+}
 
 function createLocation($capacity, $location_address){
 //    INSERT INTO locations(capacity, address) VALUES (capacity, address);
     global $db;
-
     try {
     $query = "INSERT INTO locations (capacity, address) VALUES (:capacity, :location_address)";
-
     $statement = $db->prepare($query);
     $statement->bindValue(':capacity', $capacity);
-    $statement->bindValue(':address', $location_address);
+    $statement->bindValue(':location_address', $location_address);
     $result = $statement->execute();
     $lastInsertedId = $db->lastInsertId();
     $statement->closeCursor();
