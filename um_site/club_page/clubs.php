@@ -101,33 +101,35 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
             </div>
             <?php endif; ?>
-            <?php foreach ($list_of_clubs as $club_info): ?>
-            <div class="card">
-                <div class="card-body d-flex justify-content-between">
-                    <div>
-                        <h4 class="card-title event-name"><?php echo $club_info['club_description']?></h4>
-                        <h6 class="card-subtitle mb-2"><?php echo $club_info['category_name']?></h6>
-                    </div>
-                    <div>
-                        <?php if (in_array($club_info['club_id'], $list_of_user_club_ids)): ?>
-                        <form action="clubs.php" method="post">
-                            <button type="submit" name="leave-button" value="Leave"
-                                class="btn btn-danger d-block mb-2">Leave Club</button>
-                            <input type="hidden" name="club_id" value="<?php echo $club_info['club_id']; ?>" />
-                        </form>
-                        <?php else: ?>
-                        <form action="clubs.php" method="post">
-                            <button type="submit" name="join-button" value="Join"
-                                class="btn btn-success d-block mb-2">Join Club</button>
-                            <input type="hidden" name="club_id" value="<?php echo $club_info['club_id']; ?>" />
-                        </form>
-                        <?php endif; ?>
-                        <a href="club-details.php?club_id=<?php echo $club_info['club_id'] ?>"
-                            class="btn btn-warning d-block">View Details...</a>
+            <div class="event-card-container">
+                <?php foreach ($list_of_clubs as $club_info): ?>
+                <div class="card">
+                    <div class="card-body d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title event-name"><?php echo $club_info['club_description']?></h4>
+                            <h6 class="card-subtitle mb-2"><?php echo $club_info['category_name']?></h6>
+                        </div>
+                        <div>
+                            <?php if (in_array($club_info['club_id'], $list_of_user_club_ids)): ?>
+                            <form action="clubs.php" method="post">
+                                <button type="submit" name="leave-button" value="Leave"
+                                    class="btn btn-danger d-block mb-2">Leave Club</button>
+                                <input type="hidden" name="club_id" value="<?php echo $club_info['club_id']; ?>" />
+                            </form>
+                            <?php else: ?>
+                            <form action="clubs.php" method="post">
+                                <button type="submit" name="join-button" value="Join"
+                                    class="btn btn-success d-block mb-2">Join Club</button>
+                                <input type="hidden" name="club_id" value="<?php echo $club_info['club_id']; ?>" />
+                            </form>
+                            <?php endif; ?>
+                            <a href="club-details.php?club_id=<?php echo $club_info['club_id'] ?>"
+                                class="btn btn-warning d-block">View Details...</a>
+                        </div>
                     </div>
                 </div>
+                <?php endforeach; ?>
             </div>
-            <?php endforeach; ?>
         </div>
     </div>
 
