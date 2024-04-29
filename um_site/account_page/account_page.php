@@ -85,43 +85,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>  
   <?php include('../navbar.html') ?> 
+  <div class="row justify-content-center mt-4">
+    <div class="col">
+      <div class="d-flex justify-content-center align-items-center">
+          <h3 class="mr-3">Profile</h3>
+      </div>
+      <form class="search-bar" method="post">
+        <label for="first_name">First Name:</label>
+        <div class="form-group mb-3 d-flex align-items-center">
+          <input type="text" class="mt-2 form-control" name="first_name" value="<?php echo $first_name; ?>" readonly>
+          <button type="button" class="btn btn-primary edit-button ml-2">Edit</button>
+        </div>
+        <label for="last_name">Last Name:</label>
+        <div class="form-group mb-3 d-flex align-items-center">
+          <input type="text" class="mt-2 form-control" name="last_name" value="<?php echo $last_name; ?>" readonly> 
+          <button type="button" class="btn btn-primary edit-button ml-2">Edit</button>
+        </div>
+        <label for="password">Password:</label>
+        <div class="form-group mb-3 d-flex align-items-center">
+          <input type="password" class="mt-2 form-control" name="password" id="password" value="------" readonly> 
+          <button type="button" class="btn btn-primary ml-2" id="change-password" onclick="window.location.href='change_password.php'">Change Password</button>
+        </div>
+        <label for="email">E-mail:</label>
+        <div class="form-group mb-3 d-flex align-items-center">
+          <input type="text" class="mt-2 form-control" name="email" value="<?php echo $email; ?>" readonly> 
+        </div>
+        <div class="form-group mb-3 d-flex align-items-center">
+          <button type="submit" class="btn btn-primary mt-4">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
 
-  <h1 class="text-center mt-4" style="font-size: 2.5em;">Profile</h1>
-  <div class="container">
-    <form method="post">
-      <div class="profile-container text-center" style="font-size: 1.8em;">
-        <div class="profile-item">
-          First Name: <input type="text" name="first_name" value="<?php echo $first_name; ?>" readonly> <button type="button" class="btn btn-primary edit-button">Edit</button>
-        </div>
-        <div class="profile-item">
-          Last Name: <input type="text" name="last_name" value="<?php echo $last_name; ?>" readonly> <button type="button" class="btn btn-primary edit-button">Edit</button>
-        </div>
-        <div class="profile-item">
-          Password: <input type="password" name="password" id="password" value="------" readonly> 
-          <button type="button" class="btn btn-primary" id="change-password" onclick="window.location.href='change_password.php'">Change Password</button>
-        </div>
+
 
 
 
 
 <script>
-document.getElementById('change-password').addEventListener('click', function() {
-  document.getElementById('passwordChangeForm').style.display = 'block';
-});
-</script>
-
-        <div class="profile-item">
-          Email: <input type="text" name="email" value="<?php echo $email; ?>" readonly> 
-        </div>
-  
-        <div class="profile-item">
-          <button type="submit" class="btn btn-primary">Save Changes</button>
-        </div>
-      </div>
-    </form>
-  </div>
-
-  <script>
     window.onload = function() {
   var editButtons = document.getElementsByClassName('edit-button');
   for (var i = 0; i < editButtons.length; i++) {
@@ -141,17 +143,13 @@ document.getElementById('change-password').addEventListener('click', function() 
   }
 }
 
-  </script>
-</body>
+</script>
 
-
-
-
-
-
-
-
-
+<script>
+document.getElementById('change-password').addEventListener('click', function() {
+  document.getElementById('passwordChangeForm').style.display = 'block';
+});
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
