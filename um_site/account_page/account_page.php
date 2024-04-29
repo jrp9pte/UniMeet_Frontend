@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <input type="text" class="mt-2 form-control" name="email" value="<?php echo $email; ?>" readonly> 
         </div>
         <div class="form-group mb-3 d-flex align-items-center">
-          <button type="submit" class="btn btn-primary mt-4">Save Changes</button>
+          <button type="submit" class="mt-4 btn btn-primary">Save Changes</button>
         </div>
       </form>
     </div>
