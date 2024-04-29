@@ -110,26 +110,26 @@ if(isset($_GET['event_id'])) {
 <body>
     <?php include('../navbar.html') ?>
     <div class="mt-4">
-      <h3 class="text-center"><?php echo $event_details['event_description']; ?></h3>
-      <div class="row justify-content-center align-items-center">
-        <div class="col-auto text-center">
-            <h4 class="d-inline"><?php echo $event_details['club_description']; ?></h4>
-        </div>
-        <div class="col-auto">
-            <a href="../club_page/club-details.php?club_id=<?php $event_details['club_id']; ?>">
-                <i class="mdi mdi-information-outline" style="font-size: 24px;"></i>
-            </a>
-        </div>
+        <h3 class="text-center"><?php echo $event_details['event_description']; ?></h3>
         <div class="row justify-content-center align-items-center">
-            <form action="event-details.php?event_id=<?php echo $event_id; ?>" method="post" style="margin: auto;">
-                <input type="hidden" name="email" value="<?php echo htmlspecialchars($username); ?>">
-                <div class="text-center">
-                    <button type="submit" name="delete-event-button" class="btn btn-danger mb-2"
-                        value="<?php echo htmlspecialchars($username); ?>">Delete Event</button>
-                </div>
-            </form>
+            <div class="col-auto text-center">
+                <h4 class="d-inline"><?php echo $event_details['club_description']; ?></h4>
+            </div>
+            <div class="col-auto">
+                <a href="../club_page/club-details.php?club_id=<?php $event_details['club_id']; ?>">
+                    <i class="mdi mdi-information-outline" style="font-size: 24px;"></i>
+                </a>
+            </div>
+            <div class="row justify-content-center align-items-center">
+                <form action="event-details.php?event_id=<?php echo $event_id; ?>" method="post" style="margin: auto;">
+                    <input type="hidden" name="email" value="<?php echo htmlspecialchars($username); ?>">
+                    <div class="text-center">
+                        <button type="submit" name="delete-event-button" class="btn btn-danger mb-2"
+                            value="<?php echo htmlspecialchars($username); ?>">Delete Event</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
     </div>
     <div class="row justify-content-center mt-4">
         <div class="col">
@@ -144,7 +144,7 @@ if(isset($_GET['event_id'])) {
                                 value="<?php echo$event_details['event_description']; ?>">
                             <input type="text" class="form-control mb-2" name="address"
                                 value="<?php echo $event_details['address']; ?>">
-                            <input type="datetime" class="form-control mb-2" name="date"
+                            <input type="datetime-local" class="form-control mb-2" name="date"
                                 value="<?php echo $event_details['date']; ?>">
                             <input type="number" class="form-control mb-2" name="capacity"
                                 value="<?php echo $event_details['capacity']; ?>">
