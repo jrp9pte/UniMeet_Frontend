@@ -146,7 +146,7 @@ if(isset($_GET['event_id'])) {
                                 value="<?php echo $event_details['address']; ?>">
                             <input type="datetime-local" class="form-control mb-2" name="date"
                                 value="<?php echo $event_details['date']; ?>">
-                            <input type="number" class="form-control mb-2" name="capacity"
+                            <input type="number" min="1" class="form-control mb-2" name="capacity"
                                 value="<?php echo $event_details['capacity']; ?>">
                             <div class="mb-2">
                                 <label class="form-label">Club Description:

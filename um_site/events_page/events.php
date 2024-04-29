@@ -144,11 +144,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <input type="hidden" name="event_id" value="<?php echo $event_info['event_id']; ?>" />
                             </form>
                             <?php else: ?>
+                            <?php if (getEventCurrentCapacity($event_info['event_id']) < $event_info['capacity'] ): ?>
                             <form action="events.php" method="post">
                                 <button type="submit" name="join-button" value="Join"
                                     class="btn btn-success d-block mb-2">Join Event</button>
                                 <input type="hidden" name="event_id" value="<?php echo $event_info['event_id']; ?>" />
                             </form>
+                            <?php else: ?>
+                            <p class="card-text">Event is full</p>
+                            <?php endif; ?>
                             <?php endif; ?>
                             <?php if (in_array($event_info['event_id'], $list_of_my_events)): ?>
                             <a href="event-details.php?event_id=<?php echo $event_info['event_id'] ?>"
